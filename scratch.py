@@ -1,29 +1,20 @@
 import re
-
-sample = """
-    <h1>Does this work?</h1>
-    <p>Here it goes {% print("Hello, world!")
-                        i = 0
-                        while i <10:
-                        print(i)
-    %}</p>
-    <p>Let's try here too {% print("Hello, world again!")%}</p>
-    <p>And some more text for good measure</p>
-"""
-
+from typing import Set
+import TemplateEngine
+sample = './sample.html'
 # results = re.findall('{%(.*?)%}', sample, re.MULTILINE)
 # pattern = re.compile('{%(.*)%}', re.DOTALL)
-results = re.findall('(?<={%).*(?=%})', sample, re.DOTALL)
-indices = [(m.start(0), m.end(0)) for m in re.finditer('{%(.*)%}', sample)]
-
-for result in results:
-    print(result)
-
-print(results)
-print(indices)
-removed_code = ""
-chunk_start = 0
-block_count = 0
+# results = re.findall('{%((?:.*?\r?\n?)*)%}', sample)
+# indices = [(m.start(0), m.end(0)) for m in re.finditer('{%((?:.*?\r?\n?)*)%}', sample)]
+#
+# for result in results:
+#     print(result)
+#
+# print(results)
+# print(indices)
+# removed_code = ""
+# chunk_start = 0
+# block_count = 0
 # for index in indices:
 #     removed_code += sample[chunk_start:index[0]]
 #     print(removed_code)
@@ -32,13 +23,20 @@ block_count = 0
 # removed_code += sample[chunk_start:]
 # print(removed_code)
 
-import black
-
-mode = black.Mode(
-
-)
-
-for result in results:
-    result = str(result)
-    print(result)
-    print(black.format_str(result, mode=mode))
+# import black
+#
+# target = {black.TargetVersion.PY39}
+#
+# mode = black.Mode(target_versions=target)
+#
+# for result in results:
+#     result = str(result).replace("    ", "   ")
+#     result = black.format_str(result, mode=mode)
+#     exec(result)
+template_string = TemplateEngine.TemplateReader(sample).get_string()
+parsed_template = TemplateEngine.TemplateParser(template_string)
+code_list = parsed_template.format_code()
+# print(code_list)
+loc_list = parsed_template.get_loc_list()
+template_rebuilder = TemplateEngine.TemplateRebuilder(template_string, code_list, loc_list)
+print(template_rebuilder.rebuild())
