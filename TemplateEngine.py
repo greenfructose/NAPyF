@@ -44,10 +44,14 @@ class CodeBlock:
         yield stdout
         sys.stdout = old
 
-    def execute(self):
+    def execute(self, context=None):
+        if context is None:
+            context = {}
         with self.stdoutIO() as s:
             try:
-                exec(self.code)
+                _globals = {}
+                _locals = context
+                exec(self.code, _globals, _locals)
             except:
                 print('Something wrong with template code')
             return s.getvalue()
@@ -79,7 +83,7 @@ class TemplateParser:
         return formatted_code_strings
 
 
-class TemplateRebuilder:
+class TemplateRenderer:
     """
     Rebuilds template with executed code
     """
@@ -89,8 +93,10 @@ class TemplateRebuilder:
         self.code_list = code_list
         self.locs = locs
 
-    def rebuild(self):
-        temp_template = self.original_template
+    # Takes context dictionary as optional argument
+    def render(self, context=None):
+        if context is None:
+            context = {}
         rebuilt_template = ""
         oi = 0
         for i, block in enumerate(self.code_list):

@@ -38,5 +38,6 @@ parsed_template = TemplateEngine.TemplateParser(template_string)
 code_list = parsed_template.format_code()
 # print(code_list)
 loc_list = parsed_template.get_loc_list()
-template_rebuilder = TemplateEngine.TemplateRebuilder(template_string, code_list, loc_list)
-print(template_rebuilder.rebuild())
+template_rebuilder = TemplateEngine.TemplateRenderer(template_string, code_list, loc_list)
+context = {'a': 'buffalo'}
+print(template_rebuilder.render(context=context))
