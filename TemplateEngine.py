@@ -107,3 +107,12 @@ class TemplateRenderer:
             oi = codeblock.loc[1]
         rebuilt_template = rebuilt_template + self.original_template[oi:]
         return rebuilt_template
+
+
+def render(template, context=None):
+    template_string = TemplateReader(template).get_string()
+    parsed_template = TemplateParser(template_string)
+    code_list = parsed_template.format_code()
+    loc_list = parsed_template.get_loc_list()
+    template_rebuilder = TemplateRenderer(template_string, code_list, loc_list)
+    return template_rebuilder.render(context=context)

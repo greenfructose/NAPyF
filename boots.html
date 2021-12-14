@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Boots</title>
+</head>
+<body>
+<h1>I'm the boots file</h1>
+{%
+for i in range(0, 10):
+    print(f"<p>I can get context too, see! {i} {context.get('a')}</p>")
+%}
+</body>
+</html>
