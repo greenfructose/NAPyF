@@ -3,5 +3,4 @@
 
 routes = {
     '/': '/index.html',
-    '/test': '/test/base/templates/index.html',
 }
