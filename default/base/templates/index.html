@@ -1,0 +1,11 @@
+    <h1>Does this work?</h1>
+    <p>Here it goes {% print('Hello, world!') %}</p>
+
+    {%
+i = 0
+while i <10:
+    print(f"<p>The current count is {i} {context.get('a')}</p>")
+    i += 1
+    %}
+    <p>Let's try here too {% print("Hello, world again!")%}</p>
+    <p>And some more text for good measure</p>

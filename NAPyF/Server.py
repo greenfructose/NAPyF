@@ -1,8 +1,8 @@
-from Routes import routes
-from Settings import HTTP_PORT, CURRENT_DIR
-from TemplateEngine import render
+import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import os
+from NAPyF.Routes import routes
+from Settings import HTTP_PORT, BASE_DIR
+from NAPyF.TemplateEngine import render
 
 
 class StaticServer(BaseHTTPRequestHandler):
@@ -11,14 +11,14 @@ class StaticServer(BaseHTTPRequestHandler):
     routes = {}
 
     def do_GET(self):
-        root = os.path.dirname(os.path.realpath(__file__))
+        root = BASE_DIR
         if self.path not in self.routes:
             self.send_response(404)
             self.context = {'path': self.path}
-            self.filename = root + '/404.html'
+            self.filename = root + '/error_pages/404.html'
         else:
             self.filename = root + routes.get(self.path)
-        self.send_response(200)
+            self.send_response(200)
         if self.filename[-4:] == '.css':
             self.send_header('Content-type', 'text/css')
         elif self.filename[-5:] == '.json':
@@ -32,6 +32,7 @@ class StaticServer(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(str.encode(render(self.filename, self.context)))
 
+
 # testing stuff
 context = {'a': 'buffalo'}
 server = HTTPServer
@@ -44,8 +45,17 @@ port = HTTP_PORT
 def run(server_class=server, handler_class=handler, port=port):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    print('Starting httpd on port {}'.format(port))
-    httpd.serve_forever()
+    try:
+        print('Starting httpd on port {}'.format(port))
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print('Keyboard Interrupt')
+        httpd.shutdown()
 
 
-run()
+if __name__ == "__main__":
+    try:
+        run()
+    except KeyboardInterrupt:
+        print('Keyboard Interrupt')
+        sys.exit(0)

@@ -1,6 +1,5 @@
-import re
-from typing import Set
-import TemplateEngine
+from NAPyF import TemplateEngine
+
 sample = './sample.html'
 # results = re.findall('{%(.*?)%}', sample, re.MULTILINE)
 # pattern = re.compile('{%(.*)%}', re.DOTALL)
