@@ -8,7 +8,7 @@ import NAPyF.Server
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "rbn:", ["name="])
+        opts, args = getopt.getopt(argv, "rbn:k:", ["name=", "name="])
     except getopt.GetoptError:
         print('Some error occured')
         print('begin.py -r  ----- Run Existing App')
@@ -26,6 +26,13 @@ def main(argv):
                 name = arg
                 app = App(name)
                 app.generate()
+            except KeyboardInterrupt:
+                sys.exit()
+        elif opt in ('-k', '--name'):
+            try:
+                name = arg
+                app = App(name)
+                app.kill()
             except KeyboardInterrupt:
                 sys.exit()
 

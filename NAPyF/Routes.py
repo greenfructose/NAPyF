@@ -1,6 +1,6 @@
+
 # Routes for HTTP handler
 
-
 routes = {
-    '/': '/index.html',
+    '/': '/default/base/templates/index.html',
 }
