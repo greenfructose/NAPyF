@@ -51,9 +51,9 @@ class CodeBlock:
             try:
                 _globals = {}
                 _locals = context
-                exec(self.code, _globals, _locals)
+                exec(self.code, {'context': context})
             except:
-                print('Something wrong with template code')
+                print(f'Something wrong with template code: {s}')
             return s.getvalue()
 
 
@@ -103,7 +103,7 @@ class TemplateRenderer:
             codeblock = CodeBlock(self.locs[i], block)
             # print(self.original_template[oi:self.locs[i][0]])
             rebuilt_template = rebuilt_template + self.original_template[oi:codeblock.loc[0]]
-            rebuilt_template = rebuilt_template + str(codeblock.execute())
+            rebuilt_template = rebuilt_template + str(codeblock.execute(context=context))
             oi = codeblock.loc[1]
         rebuilt_template = rebuilt_template + self.original_template[oi:]
         return rebuilt_template
