@@ -11,12 +11,15 @@ class App:
         self.app_dir = Settings.BASE_DIR + '/' + self.name
         self.app_base = self.app_dir + '/base'
         self.template_directory = self.app_base + '/templates'
+        self.local_static_directory = self.app_base + '/local_static'
         self.relative_route_path = '/' + self.name
+
 
     def generate(self):
         os.mkdir(self.app_dir)
         os.mkdir(self.app_base)
         os.mkdir(self.template_directory)
+        os.mkdir(self.local_static_directory)
         copyfile(Settings.APP_INDEX_TEMPLATE, self.template_directory + '/index.html')
         route_string = ""
         with open(Settings.ROUTES_FILE, 'r') as f:
@@ -42,6 +45,7 @@ class App:
             except:
                 print(f'Error occured while removing {file}')
         os.rmdir(self.template_directory)
+        os.rmdir(self.local_static_directory)
         os.rmdir(self.app_base)
         os.rmdir(self.app_dir)
 

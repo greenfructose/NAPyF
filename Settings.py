@@ -13,9 +13,12 @@ if MODE == "PROD":
     HTTP_PORT = 80
     HTTPS_PORT = 443
 
+# Default app name
+APP_NAME = 'default'
+
 # Default Project Directories Directories
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-TEMPLATE_DIR = BASE_DIR + '/default/base/templates'
+TEMPLATE_DIR = BASE_DIR + f'/{APP_NAME}/base/templates'
 
 # Default file project locations
 ROUTES_FILE = BASE_DIR + '/NAPyF/Routes.py'
