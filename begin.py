@@ -1,7 +1,9 @@
 import getopt
+import os
 import io
 import sys
 from contextlib import redirect_stdout
+from Settings import TermColors
 from NAPyF.AppGenerator import App
 import NAPyF.Server
 
@@ -24,15 +26,27 @@ def main(argv):
         elif opt in ('-n', '--name'):
             try:
                 name = arg
+                print(f'Generating files for {name}...')
                 app = App(name)
                 app.generate()
+                print('Done!')
             except KeyboardInterrupt:
                 sys.exit()
         elif opt in ('-k', '--name'):
             try:
                 name = arg
-                app = App(name)
-                app.kill()
+                print(f'{TermColors.WARNING}{TermColors.BOLD}All associated files and routes will be deleted.{TermColors.ENDC}')
+                sure = input(f'Are you sure you want to delete {name}? \n(y/n)')
+                if sure.lower().strip() == 'y':
+                    print(f'Deleting {name}...')
+                    app = App(name)
+                    app.kill()
+                    print('Done!')
+                elif sure.lower().strip() == 'n':
+                    sys.exit()
+                else:
+                    print('Invalid input. Exiting now.')
+                    sys.exit()
             except KeyboardInterrupt:
                 sys.exit()
 

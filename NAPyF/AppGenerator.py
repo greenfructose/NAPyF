@@ -31,8 +31,8 @@ class App:
             route_string = f.read()
         new_route_string = ""
         for line in route_string.splitlines():
-            if '/' + self.name not in line:
-                new_route_string += '\n' + line + '\n'
+            if self.name not in line:
+                new_route_string += line + '\n'
         with open(Settings.ROUTES_FILE, 'w') as f:
             f.write(new_route_string)
         filelist = glob(self.template_directory + '/*')

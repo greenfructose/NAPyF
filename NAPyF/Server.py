@@ -1,5 +1,6 @@
 import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import webbrowser
 from NAPyF.Routes import routes
 from Settings import HTTP_PORT, BASE_DIR
 from NAPyF.TemplateEngine import render
@@ -43,10 +44,11 @@ port = HTTP_PORT
 
 
 def run(server_class=server, handler_class=handler, port=port):
-    server_address = ('', port)
+    server_address = ('localhost', port)
     httpd = server_class(server_address, handler_class)
     try:
         print('Starting httpd on port {}'.format(port))
+        webbrowser.open('http://' + server_address[0] + ':' + str(server_address[1]))
         httpd.serve_forever()
     except KeyboardInterrupt:
         print('Keyboard Interrupt')
