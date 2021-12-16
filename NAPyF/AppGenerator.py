@@ -14,7 +14,6 @@ class App:
         self.local_static_directory = self.app_base + '/local_static'
         self.relative_route_path = '/' + self.name
 
-
     def generate(self):
         os.mkdir(self.app_dir)
         os.mkdir(self.app_base)
@@ -25,7 +24,11 @@ class App:
         with open(Settings.ROUTES_FILE, 'r') as f:
             route_string = f.read()
         end = route_string.find('}')
-        new_route_string = (route_string[:end] + "\t'/" + self.name + "': '" + self.relative_route_path + "/base/templates/index.html',\n}\n").expandtabs(4)
+        new_route_string = (route_string[
+                            :end] + "\t'/" + self.name + "': '" + self.relative_route_path + "/base/templates/index"
+                                                                                             ".html',"
+                                                                                             "\n}\n").expandtabs(
+            4)
         with open(Settings.ROUTES_FILE, 'w') as f:
             f.write(new_route_string)
 
@@ -48,4 +51,3 @@ class App:
         os.rmdir(self.local_static_directory)
         os.rmdir(self.app_base)
         os.rmdir(self.app_dir)
-
