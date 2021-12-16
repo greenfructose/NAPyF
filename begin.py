@@ -4,7 +4,7 @@ import io
 import sys
 from contextlib import redirect_stdout
 from Settings import TermColors
-from NAPyF.AppGenerator import App
+from NAPyF.App import App
 import NAPyF.Server
 
 
@@ -25,7 +25,7 @@ def main(argv):
                 sys.exit(0)
         elif opt in ('-n', '--name'):
             try:
-                name = arg
+                name = arg.strip()
                 print(f'Generating files for {name}...')
                 app = App(name)
                 app.generate()
@@ -34,7 +34,7 @@ def main(argv):
                 sys.exit()
         elif opt in ('-k', '--name'):
             try:
-                name = arg
+                name = arg.strip()
                 print(f'{TermColors.WARNING}{TermColors.BOLD}All associated files and routes will be deleted.{TermColors.ENDC}')
                 sure = input(f'Are you sure you want to delete {name}? \n(y/n)')
                 if sure.lower().strip() == 'y':

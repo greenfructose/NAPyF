@@ -13,6 +13,7 @@ class App:
         self.template_directory = self.app_base + '/templates'
         self.local_static_directory = self.app_base + '/local_static'
         self.relative_route_path = '/' + self.name
+        self.context = None
 
     def generate(self):
         os.mkdir(self.app_dir)

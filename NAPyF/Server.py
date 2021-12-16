@@ -3,41 +3,12 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import webbrowser
 from NAPyF.Routes import routes
 from Settings import HTTP_PORT, BASE_DIR
-from NAPyF.TemplateEngine import render
-
-
-class StaticServer(BaseHTTPRequestHandler):
-    context = None
-    filename = None
-    routes = {}
-
-    def do_GET(self):
-        root = BASE_DIR
-        if self.path not in self.routes:
-            self.send_response(404)
-            self.context = {'path': self.path}
-            self.filename = root + '/error_pages/404.html'
-        else:
-            self.filename = root + routes.get(self.path)
-            self.send_response(200)
-        if self.filename[-4:] == '.css':
-            self.send_header('Content-type', 'text/css')
-        elif self.filename[-5:] == '.json':
-            self.send_header('Content-type', 'application/javascript')
-        elif self.filename[-3:] == '.js':
-            self.send_header('Content-type', 'application/javascript')
-        elif self.filename[-4:] == '.ico':
-            self.send_header('Content-type', 'image/x-icon')
-        else:
-            self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        self.wfile.write(str.encode(render(self.filename, self.context)))
-
+from NAPyF.RequestHandler import RequestHandler
 
 # testing stuff
 context = {'a': 'buffalo'}
 server = HTTPServer
-handler = StaticServer
+handler = RequestHandler
 handler.context = context
 handler.routes = routes
 port = HTTP_PORT
