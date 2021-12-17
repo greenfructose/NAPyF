@@ -1,10 +1,9 @@
 from NAPyF.App import App
+from NAPyF.RequestHandler import RequestHandler
+from NAPyF.Types import Route, Method
 
 
-default = App('default')
-default.context = {'testkey1': 'one', 'testkey2': 'two'}
+def default():
+    app = App('default')
+    return app
 
-
-active_apps = [
-    'default',
-]

@@ -3,6 +3,7 @@ import os
 from glob import glob
 from shutil import copyfile
 import Settings
+from NAPyF.Types import Route, Method
 
 
 class App:
@@ -13,8 +14,16 @@ class App:
         self.template_directory = self.app_base + '/templates'
         self.local_static_directory = self.app_base + '/local_static'
         self.relative_route_path = '/' + self.name
-        self.context = None
-
+        self.routes = [
+            Route(
+                app_name=self.name,
+                route_path=self.relative_route_path,
+                file_path=f'{self.template_directory}/index.html',
+                context={},
+                method=Method.GET
+            )
+        ]
+    """Generate new app files and routes"""
     def generate(self):
         os.mkdir(self.app_dir)
         os.mkdir(self.app_base)
@@ -33,6 +42,7 @@ class App:
         with open(Settings.ROUTES_FILE, 'w') as f:
             f.write(new_route_string)
 
+    """Deletes app files and routes"""
     def kill(self):
         with open(Settings.ROUTES_FILE, 'r') as f:
             route_string = f.read()
@@ -52,3 +62,9 @@ class App:
         os.rmdir(self.local_static_directory)
         os.rmdir(self.app_base)
         os.rmdir(self.app_dir)
+
+    """Adds route to app"""
+    def add_route(self, route):
+        self.routes.append(route)
+
+
