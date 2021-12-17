@@ -1,7 +1,6 @@
 # Settings for server and DB connections
 import os
 from NAPyF.Types import ServerMode
-from NAPyF.Routes import routes
 
 # Set mode to DEV or PROD
 MODE = ServerMode.DEV.name
@@ -19,6 +18,7 @@ TEMPLATE_DIR = BASE_DIR + f'/default/base/templates'
 
 # Default file project locations
 ROUTES_FILE = BASE_DIR + '/NAPyF/Routes.py'
+APPS_FILE = BASE_DIR + '/NAPyF/Apps.py'
 
 # App creation templates
 APP_INDEX_TEMPLATE = BASE_DIR + '/NAPyF/FileTemplates/index.html'

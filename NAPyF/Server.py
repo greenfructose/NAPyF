@@ -1,16 +1,12 @@
 import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import webbrowser
-from NAPyF.Routes import routes
 from Settings import HTTP_PORT, BASE_DIR
 from NAPyF.RequestHandler import RequestHandler
 
 # testing stuff
-context = {'a': 'buffalo'}
 server = HTTPServer
 handler = RequestHandler
-handler.context = context
-handler.routes = routes
 port = HTTP_PORT
 
 

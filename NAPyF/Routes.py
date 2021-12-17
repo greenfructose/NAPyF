@@ -1,6 +1,10 @@
-from NAPyF.Apps import default
-# Routes for HTTP handler
+from NAPyF.Apps import *
 
-routes = [
-    default().routes
-]
+
+def route_builder():
+    routes = []
+    for app in active_apps:
+        temp_app = app()
+        for route in temp_app.routes:
+            routes.append(route)
+    return routes

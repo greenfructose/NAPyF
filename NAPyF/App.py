@@ -4,6 +4,8 @@ from glob import glob
 from shutil import copyfile
 import Settings
 from NAPyF.Types import Route, Method
+import black
+from pathlib import Path
 
 
 class App:
@@ -23,35 +25,46 @@ class App:
                 method=Method.GET
             )
         ]
+
     """Generate new app files and routes"""
+
     def generate(self):
         os.mkdir(self.app_dir)
         os.mkdir(self.app_base)
         os.mkdir(self.template_directory)
         os.mkdir(self.local_static_directory)
         copyfile(Settings.APP_INDEX_TEMPLATE, self.template_directory + '/index.html')
-        route_string = ""
-        with open(Settings.ROUTES_FILE, 'r') as f:
-            route_string = f.read()
-        end = route_string.find('}')
-        new_route_string = (route_string[
-                            :end] + "\t'/" + self.name + "': '" + self.relative_route_path + "/base/templates/index"
-                                                                                             ".html',"
-                                                                                             "\n}\n").expandtabs(
-            4)
-        with open(Settings.ROUTES_FILE, 'w') as f:
-            f.write(new_route_string)
+        app_string = ""
+        with open(Settings.APPS_FILE, 'r') as f:
+            app_string = f.read()
+        end_app_def = app_string.find('active_apps')
+        active_apps = app_string[end_app_def:]
+        new_app_string = (app_string[
+                          :end_app_def] + "def " + self.name + "():\n\t" +
+                          "app = App('" + self.name + "')\n\t" +
+                          "return app\n\n\n"
+                          ).expandtabs(4)
+        end_active_apps = active_apps.find(']\n')
+        new_active_apps = (active_apps[
+                           :end_active_apps] + "\t" + self.name + ",\n]").expandtabs(4)
+        with open(Settings.APPS_FILE, 'w') as f:
+            f.write(new_app_string)
+            f.write(new_active_apps)
+        black.format_file_in_place(Path(Settings.APPS_FILE), fast=True, mode=black.Mode())
 
     """Deletes app files and routes"""
+
     def kill(self):
-        with open(Settings.ROUTES_FILE, 'r') as f:
-            route_string = f.read()
-        new_route_string = ""
-        for line in route_string.splitlines():
-            if self.name not in line:
-                new_route_string += line + '\n'
-        with open(Settings.ROUTES_FILE, 'w') as f:
-            f.write(new_route_string)
+        with open(Settings.APPS_FILE, 'r') as f:
+            app_string = f.read()
+        new_app_string = ""
+        start_of_app_def = app_string.find("def " + self.name)
+        end_of_app_def = app_string[start_of_app_def:].find("return app") + start_of_app_def + 10
+        new_app_string += app_string[:start_of_app_def] + app_string[end_of_app_def:]
+        new_app_string = new_app_string.replace(self.name + ',\n', "")
+        with open(Settings.APPS_FILE, 'w') as f:
+            f.write(new_app_string)
+        black.format_file_in_place(Path(Settings.APPS_FILE), fast=True, mode=black.Mode())
         filelist = glob(self.template_directory + '/*')
         for file in filelist:
             try:
@@ -64,7 +77,6 @@ class App:
         os.rmdir(self.app_dir)
 
     """Adds route to app"""
+
     def add_route(self, route):
         self.routes.append(route)
-
-
