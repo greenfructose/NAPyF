@@ -30,7 +30,9 @@ def main(argv):
                 name = arg.strip()
                 print(f'Generating files for {name}...')
                 app = App(name)
-                app.generate()
+                generated = app.generate()
+                while not generated:
+                    continue
                 route_builder()
                 # autopep8.fix_file(ROUTES_FILE, CODE_FORMAT_OPTIONS)
                 print('Done!')
@@ -44,7 +46,9 @@ def main(argv):
                 if sure.lower().strip() == 'y':
                     print(f'Deleting {name}...')
                     app = App(name)
-                    app.kill()
+                    killed = app.kill()
+                    while not killed:
+                        continue
                     route_builder()
                     # autopep8.fix_file(ROUTES_FILE, CODE_FORMAT_OPTIONS)
                     print('Done!')

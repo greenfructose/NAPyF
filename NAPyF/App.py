@@ -48,10 +48,13 @@ class App:
         end_active_apps = active_apps.find(']\n')
         new_active_apps = (active_apps[
                            :end_active_apps] + "\t" + self.name + ",\n]").expandtabs(4)
+        # new_app_string = autopep8.fix_code(new_app_string, Settings.CODE_FORMAT_OPTIONS)
+        # new_active_apps = autopep8.fix_code(new_active_apps, Settings.CODE_FORMAT_OPTIONS)
         with open(Settings.APPS_FILE, 'w') as f:
             f.write(new_app_string)
             f.write(new_active_apps)
         autopep8.fix_file(Settings.APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
+        return True
         # black.format_file_in_place(Path(Settings.ROUTES_FILE), fast=True, mode=black.Mode())
 
     """Deletes app files and routes"""
@@ -64,9 +67,10 @@ class App:
         end_of_app_def = app_string[start_of_app_def:].find("return app") + start_of_app_def + 10
         new_app_string += app_string[:start_of_app_def] + app_string[end_of_app_def:]
         new_app_string = new_app_string.replace(self.name + ',\n', "")
+        new_app_string = autopep8.fix_code(new_app_string, Settings.CODE_FORMAT_OPTIONS)
         with open(Settings.APPS_FILE, 'w') as f:
             f.write(new_app_string)
-        autopep8.fix_file(Settings.APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
+        # autopep8.fix_file(Settings.APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
         filelist = glob(self.template_directory + '/*')
         for file in filelist:
             try:
@@ -77,6 +81,7 @@ class App:
         os.rmdir(self.local_static_directory)
         os.rmdir(self.app_base)
         os.rmdir(self.app_dir)
+        return True
         # black.format_file_in_place(Path(Settings.ROUTES_FILE), fast=True, mode=black.Mode())
 
     """Adds route to app"""

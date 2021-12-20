@@ -41,7 +41,7 @@ class TermColors:
 class CodeFormatOptions(object):
     def __init__(self):
         self.in_place = True
-        self.pep8_passes = 1
+        self.pep8_passes = -1
         self.list_fixes = None
         self.jobs = 1
         self.ignore = []
@@ -55,7 +55,7 @@ class CodeFormatOptions(object):
         self.max_line_length = 79
         self.indent_size = 4
         self.experimental = False
-        self.hang_closing = True
+        self.hang_closing = False
 
 
 CODE_FORMAT_OPTIONS = CodeFormatOptions()
