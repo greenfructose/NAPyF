@@ -15,8 +15,9 @@ def main(argv):
         opts, args = getopt.getopt(argv, "rbn:k:", ["name=", "name="])
     except getopt.GetoptError:
         print('Some error occured')
-        print('begin.py -r  ----- Run Existing App')
-        print('begin.py -b -n <name>  ----- New app with name')
+        print('begin.py -r                  ----- Run Server')
+        print('begin.py -n <app name>       ----- New app with name')
+        print('begin.py -k <app name>       ----- Delete existing app')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-r':
