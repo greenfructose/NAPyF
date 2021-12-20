@@ -35,7 +35,6 @@ def main(argv):
                 while not generated:
                     continue
                 route_builder()
-                # autopep8.fix_file(ROUTES_FILE, CODE_FORMAT_OPTIONS)
                 print('Done!')
             except KeyboardInterrupt:
                 sys.exit()
@@ -51,7 +50,6 @@ def main(argv):
                     while not killed:
                         continue
                     route_builder()
-                    # autopep8.fix_file(ROUTES_FILE, CODE_FORMAT_OPTIONS)
                     print('Done!')
                 elif sure.lower().strip() == 'n':
                     sys.exit()
