@@ -38,6 +38,7 @@ class TermColors:
     UNDERLINE = '\033[4m'
 
 
+# Settings for the autopep8 code formatter
 class CodeFormatOptions(object):
     def __init__(self):
         self.in_place = True

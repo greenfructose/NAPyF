@@ -14,18 +14,7 @@ def default():
     return app
 
 
-def test():
-    app = App('test')
-    return app
-
-
-def test1():
-    app = App('test1')
-    return app
-
-
+# Active apps will have routes automatically generated for them
 active_apps = [
     default,
-    test,
-    test1,
 ]

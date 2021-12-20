@@ -1,11 +1,10 @@
 import sys
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer
 import webbrowser
-from Settings import HTTP_PORT, BASE_DIR
+from Settings import HTTP_PORT
 from NAPyF.RequestHandler import RequestHandler
 from NAPyF.Routes import route_builder
 
-# testing stuff
 server = HTTPServer
 handler = RequestHandler
 port = HTTP_PORT

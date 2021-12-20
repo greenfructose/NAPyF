@@ -1,7 +1,7 @@
 import sys
 from http.server import BaseHTTPRequestHandler
-from NAPyF.App import App
-from NAPyF.active_routes import routes
+from importlib import reload
+import NAPyF.active_routes
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
 from Settings import BASE_DIR
@@ -16,6 +16,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     route_match = False
 
     def do_GET(self):
+        reload(NAPyF.active_routes)
         # self.set_app()
         # self.get_route_paths(self.app)
         if self.path == "/killserver":
@@ -46,32 +47,10 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(str.encode(render(self.file_path, self.context)))
 
     def match_route(self, method):
-        for route in routes:
+        for route in NAPyF.active_routes.routes:
             if self.path == route["route_path"] and method == route["method"]:
                 print('Route match!')
                 self.route_match = True
                 self.file_path = route["file_path"]
                 self.context = route["context"]
 
-    # def get_route_paths(self, app):
-    #     for route in routes:
-    #         if route["app_name"] == app.name:
-    #             print(f'Adding route {route["route_path"]} to request')
-    #             self.route_paths.append(route["route_path"])
-
-    # def set_app(self):
-    #     for route in routes:
-    #         if self.path == route["route_path"]:
-    #             self.app = App(route["app_name"])
-    #             print(f'App is {self.app.name}')
-    #             self.route_paths.append(route)
-    #             print(f'Route paths : {self.route_paths}')
-    #         else:
-    #             self.app = App('default')
-    #
-    # def set_filepath_context(self, method):
-    #     for route in routes:
-    #         if self.path == route["route_path"] and method == route["method"]:
-    #             print(f'Route match! Serving {route["file_path"]}')
-    #             self.file_path = route["file_path"]
-    #             self.context = route["context"]

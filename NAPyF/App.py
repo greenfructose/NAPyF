@@ -4,9 +4,7 @@ from glob import glob
 from shutil import copyfile
 import Settings
 from NAPyF.Types import Route, Method
-# from NAPyF.Routes import route_builder
 import autopep8
-from pathlib import Path
 
 
 class App:
@@ -27,9 +25,8 @@ class App:
             )
         ]
 
-    """Generate new app files and routes"""
-
     def generate(self):
+        """Generate new app files and routes"""
         os.mkdir(self.app_dir)
         os.mkdir(self.app_base)
         os.mkdir(self.template_directory)
@@ -48,18 +45,14 @@ class App:
         end_active_apps = active_apps.find(']\n')
         new_active_apps = (active_apps[
                            :end_active_apps] + "\t" + self.name + ",\n]").expandtabs(4)
-        # new_app_string = autopep8.fix_code(new_app_string, Settings.CODE_FORMAT_OPTIONS)
-        # new_active_apps = autopep8.fix_code(new_active_apps, Settings.CODE_FORMAT_OPTIONS)
         with open(Settings.APPS_FILE, 'w') as f:
             f.write(new_app_string)
             f.write(new_active_apps)
         autopep8.fix_file(Settings.APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
         return True
-        # black.format_file_in_place(Path(Settings.ROUTES_FILE), fast=True, mode=black.Mode())
-
-    """Deletes app files and routes"""
 
     def kill(self):
+        """Deletes app files and routes"""
         with open(Settings.APPS_FILE, 'r') as f:
             app_string = f.read()
         new_app_string = ""
@@ -70,7 +63,6 @@ class App:
         new_app_string = autopep8.fix_code(new_app_string, Settings.CODE_FORMAT_OPTIONS)
         with open(Settings.APPS_FILE, 'w') as f:
             f.write(new_app_string)
-        # autopep8.fix_file(Settings.APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
         filelist = glob(self.template_directory + '/*')
         for file in filelist:
             try:
@@ -82,9 +74,10 @@ class App:
         os.rmdir(self.app_base)
         os.rmdir(self.app_dir)
         return True
-        # black.format_file_in_place(Path(Settings.ROUTES_FILE), fast=True, mode=black.Mode())
-
-    """Adds route to app"""
 
     def add_route(self, route):
+        """Adds route to app"""
+        if not os.path.isfile(route["file_path"]):
+            file = open(route["file_path"], 'w+')
+            file.close()
         self.routes.append(route)

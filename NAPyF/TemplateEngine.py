@@ -28,7 +28,7 @@ class CodeTag:
 
 class CodeBlock:
     """
-    Format string in code as Python code
+    Format string in code as Python code and execute it
     """
 
     def __init__(self, loc, code):
