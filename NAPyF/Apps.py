@@ -8,12 +8,12 @@ def default():
         app_name=app.name,
         route_path='/',
         file_path=f'{app.template_directory}/index.html',
-        context={},
-        method=Method.GET
-    ))
+        context={'title': 'Default', 'app_name': app.name},
+        method=Method.GET.value
+        ))
     return app
 
 
 active_apps = [
     default,
-]
+        ]

@@ -4,7 +4,8 @@ from glob import glob
 from shutil import copyfile
 import Settings
 from NAPyF.Types import Route, Method
-import black
+# from NAPyF.Routes import route_builder
+import autopep8
 from pathlib import Path
 
 
@@ -21,8 +22,8 @@ class App:
                 app_name=self.name,
                 route_path=self.relative_route_path,
                 file_path=f'{self.template_directory}/index.html',
-                context={},
-                method=Method.GET
+                context={'title': self.name, 'app_name': self.name},
+                method=Method.GET.value
             )
         ]
 
@@ -50,7 +51,8 @@ class App:
         with open(Settings.APPS_FILE, 'w') as f:
             f.write(new_app_string)
             f.write(new_active_apps)
-        black.format_file_in_place(Path(Settings.APPS_FILE), fast=True, mode=black.Mode())
+        autopep8.fix_file(Settings.APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
+        # black.format_file_in_place(Path(Settings.ROUTES_FILE), fast=True, mode=black.Mode())
 
     """Deletes app files and routes"""
 
@@ -64,7 +66,7 @@ class App:
         new_app_string = new_app_string.replace(self.name + ',\n', "")
         with open(Settings.APPS_FILE, 'w') as f:
             f.write(new_app_string)
-        black.format_file_in_place(Path(Settings.APPS_FILE), fast=True, mode=black.Mode())
+        autopep8.fix_file(Settings.APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
         filelist = glob(self.template_directory + '/*')
         for file in filelist:
             try:
@@ -75,6 +77,7 @@ class App:
         os.rmdir(self.local_static_directory)
         os.rmdir(self.app_base)
         os.rmdir(self.app_dir)
+        # black.format_file_in_place(Path(Settings.ROUTES_FILE), fast=True, mode=black.Mode())
 
     """Adds route to app"""
 

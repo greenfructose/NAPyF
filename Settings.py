@@ -17,7 +17,8 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 TEMPLATE_DIR = BASE_DIR + f'/default/base/templates'
 
 # Default file project locations
-ROUTES_FILE = BASE_DIR + '/NAPyF/Routes.py'
+ROUTE_FILE = BASE_DIR + ' /NAPyF/Routes'
+ROUTES_FILE = BASE_DIR + '/NAPyF/active_routes.py'
 APPS_FILE = BASE_DIR + '/NAPyF/Apps.py'
 
 # App creation templates
@@ -35,3 +36,26 @@ class TermColors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+
+class CodeFormatOptions(object):
+    def __init__(self):
+        self.in_place = True
+        self.pep8_passes = 1
+        self.list_fixes = None
+        self.jobs = 1
+        self.ignore = []
+        self.verbose = 0
+        self.diff = None
+        self.select = []
+        self.exclude = []
+        self.aggressive = 2
+        self.line_range = []
+        self.recursive = None
+        self.max_line_length = 79
+        self.indent_size = 4
+        self.experimental = False
+        self.hang_closing = True
+
+
+CODE_FORMAT_OPTIONS = CodeFormatOptions()

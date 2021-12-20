@@ -3,7 +3,9 @@ import os
 import io
 import sys
 from contextlib import redirect_stdout
-from Settings import TermColors
+import autopep8
+from NAPyF.Routes import route_builder
+from Settings import TermColors, ROUTES_FILE, CODE_FORMAT_OPTIONS
 from NAPyF.App import App
 import NAPyF.Server
 
@@ -29,6 +31,8 @@ def main(argv):
                 print(f'Generating files for {name}...')
                 app = App(name)
                 app.generate()
+                route_builder()
+                # autopep8.fix_file(ROUTES_FILE, CODE_FORMAT_OPTIONS)
                 print('Done!')
             except KeyboardInterrupt:
                 sys.exit()
@@ -41,6 +45,8 @@ def main(argv):
                     print(f'Deleting {name}...')
                     app = App(name)
                     app.kill()
+                    route_builder()
+                    # autopep8.fix_file(ROUTES_FILE, CODE_FORMAT_OPTIONS)
                     print('Done!')
                 elif sure.lower().strip() == 'n':
                     sys.exit()

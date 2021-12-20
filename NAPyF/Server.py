@@ -3,6 +3,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import webbrowser
 from Settings import HTTP_PORT, BASE_DIR
 from NAPyF.RequestHandler import RequestHandler
+from NAPyF.Routes import route_builder
 
 # testing stuff
 server = HTTPServer
@@ -12,6 +13,8 @@ port = HTTP_PORT
 
 def run(server_class=server, handler_class=handler, port=port):
     server_address = ('localhost', port)
+    print('Setting routes...')
+    route_builder()
     httpd = server_class(server_address, handler_class)
     try:
         print('Starting httpd on port {}'.format(port))
