@@ -3,7 +3,8 @@ import sys
 from io import StringIO
 import contextlib
 import re
-import black
+import autopep8
+from Settings import CODE_FORMAT_OPTIONS
 
 
 class TemplateReader:
@@ -78,7 +79,7 @@ class TemplateParser:
     def format_code(self):
         formatted_code_strings = []
         for i in self.get_code_list():
-            formatted_code = black.format_str(i, mode=black.Mode())
+            formatted_code = autopep8.fix_code(i, CODE_FORMAT_OPTIONS)
             formatted_code_strings.append(formatted_code)
         return formatted_code_strings
 

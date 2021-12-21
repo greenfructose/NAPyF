@@ -1,12 +1,1 @@
-routes = [{'app_name': 'default',
-           'route_path': '/default',
-           'file_path': 'C:\\Users\\jturney\\PycharmProjects\\NAPyF/default/base/templates/index.html',
-           'context': {'title': 'default',
-                       'app_name': 'default'},
-           'method': 1},
-          {'app_name': 'default',
-           'route_path': '/',
-           'file_path': 'C:\\Users\\jturney\\PycharmProjects\\NAPyF/default/base/templates/index.html',
-           'context': {'title': 'Default',
-                       'app_name': 'default'},
-           'method': 1}]
+routes = [ < NAPyF.Types.Route object at 0x00000187CD1E2F70 > , {'app_name': 'default', 'route_path': '/', 'request_method': 1, 'file_path': 'C:\\Users\\jturney\\PycharmProjects\\NAPyF/default/base/templates/index.html', 'context': {'title': 'Default', 'app_name': 'default'}, 'request_function': None}, {'app_name': 'default', 'route_path': '/', 'request_method': 2, 'file_path': 'C:\\Users\\jturney\\PycharmProjects\\NAPyF/default/base/templates/index.html', 'context': {'title': 'Default', 'app_name': 'default'}, 'request_function': None}]

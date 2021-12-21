@@ -1,5 +1,5 @@
 # Custom Data Types
-from typing import TypedDict
+from typing import TypedDict, Any
 from enum import Enum
 
 
@@ -17,9 +17,11 @@ class Method(Enum):
 
 
 # Route TypedDict, route_path is url, file_path is file location to server at route
-class Route(TypedDict):
-    app_name: str
-    route_path: str
-    file_path: str
-    context: dict
-    method: Method
+class Route:
+    def __init__(self, app_name, route_path, file_path, request_method, context, request_function):
+        self.app_name = app_name
+        self.route_path = route_path
+        self.request_method = request_method
+        self.file_path = file_path
+        self.context = context
+        self.request_function = request_function()

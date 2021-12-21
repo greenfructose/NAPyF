@@ -4,7 +4,9 @@ from importlib import reload
 import NAPyF.active_routes
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
+from NAPyF.RequestFunctions import *
 from Settings import BASE_DIR
+import cgi
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -14,6 +16,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     route = None
     route_path = None
     route_match = False
+    request_function = None
 
     def do_GET(self):
         reload(NAPyF.active_routes)
@@ -24,12 +27,11 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.server.server_close()
             print('Server closed, exiting now')
             sys.exit()
-        root = BASE_DIR
         self.match_route(Method.GET.value)
         if not self.route_match:
             self.send_response(404)
             self.context = {'path': self.path}
-            self.file_path = root + '/NAPyF/FileTemplates/error_pages/404.html'
+            self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
         else:
             # self.set_filepath_context(Method.GET.value)
             self.send_response(200)
@@ -45,12 +47,50 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'text/html')
         self.end_headers()
         self.wfile.write(str.encode(render(self.file_path, self.context)))
+        return
+
+    def do_POST(self):
+        reload(NAPyF.active_routes)
+        self.match_route(Method.POST.value)
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={
+                'REQUEST_METHOD': 'POST',
+                'CONTENT_TYPE': self.headers['Content-Type'],
+            }
+        )
+        if not self.route_match:
+            self.send_response(404)
+            self.context = {'path': self.path}
+            self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
+        else:
+            self.send_response(200)
+            self.end_headers()
+            self.route.request_function(form=form)
+            # self.wfile.write(str.encode('Client: %s\n' % str(self.client_address)))
+            # self.wfile.write(str.encode('User-agent: %s\n' % str(self.headers['user-agent'])))
+            # self.wfile.write(str.encode('Path: %s\n' % self.path))
+            # self.wfile.write(str.encode('Form data:\n'))
+            # for field in form.keys():
+            #     field_item = form[field]
+            #     if field_item.filename:
+            #         # The field contains an uploaded file
+            #         file_data = field_item.file.read()
+            #         file_len = len(file_data)
+            #         del file_data
+            #         self.wfile.write(str.encode('\tUploaded %s as "%s" (%d bytes)\n' % \
+            #                                     (field, field_item.filename, file_len)))
+            #     else:
+            #         # Regular form value
+            #         self.wfile.write(str.encode('\t%s=%s\n' % (field, form[field].value)))
+            return
 
     def match_route(self, method):
         for route in NAPyF.active_routes.routes:
-            if self.path == route["route_path"] and method == route["method"]:
+            if self.path == route.route_path and method == route.request_method:
                 print('Route match!')
                 self.route_match = True
-                self.file_path = route["file_path"]
-                self.context = route["context"]
-
+                self.file_path = route.file_path
+                self.context = route.context
+                self.route = route
