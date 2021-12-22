@@ -1,5 +1,5 @@
 # Custom Data Types
-from typing import TypedDict, Any
+from typing import TypedDict, Any, Type
 from enum import Enum
 
 
@@ -24,5 +24,14 @@ class Route(object):
         self.request_method = request_method
         self.file_path = file_path
         self.context = context
+
     request_function = None
     html_templates = {}
+
+
+class Field(TypedDict):
+    name: str
+    display_name: str
+    data_type: Type
+    max_length: int
+    data: Any

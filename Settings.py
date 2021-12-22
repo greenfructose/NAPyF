@@ -24,6 +24,8 @@ APPS_FILE = BASE_DIR + '/NAPyF/Apps.py'
 # App creation templates
 APP_INDEX_TEMPLATE = BASE_DIR + '/NAPyF/FileTemplates/index.html'
 
+# Database Settings
+DB_TYPE = 'sqlite3'
 
 # Terminal Text Colors
 class TermColors:
