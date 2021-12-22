@@ -4,7 +4,7 @@ from importlib import reload
 import NAPyF.active_routes
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
-from NAPyF.RequestFunctions import *
+from NAPyF.RequestFunctions import active_functions
 from Settings import BASE_DIR
 import cgi
 
@@ -67,30 +67,14 @@ class RequestHandler(BaseHTTPRequestHandler):
         else:
             self.send_response(200)
             self.end_headers()
-            self.route.request_function(form=form)
-            # self.wfile.write(str.encode('Client: %s\n' % str(self.client_address)))
-            # self.wfile.write(str.encode('User-agent: %s\n' % str(self.headers['user-agent'])))
-            # self.wfile.write(str.encode('Path: %s\n' % self.path))
-            # self.wfile.write(str.encode('Form data:\n'))
-            # for field in form.keys():
-            #     field_item = form[field]
-            #     if field_item.filename:
-            #         # The field contains an uploaded file
-            #         file_data = field_item.file.read()
-            #         file_len = len(file_data)
-            #         del file_data
-            #         self.wfile.write(str.encode('\tUploaded %s as "%s" (%d bytes)\n' % \
-            #                                     (field, field_item.filename, file_len)))
-            #     else:
-            #         # Regular form value
-            #         self.wfile.write(str.encode('\t%s=%s\n' % (field, form[field].value)))
+            self.wfile.write(active_functions[self.route["request_function"]](form=form))
             return
 
     def match_route(self, method):
         for route in NAPyF.active_routes.routes:
-            if self.path == route.route_path and method == route.request_method:
+            if self.path == route["route_path"] and method == route["request_method"]:
                 print('Route match!')
                 self.route_match = True
-                self.file_path = route.file_path
-                self.context = route.context
+                self.file_path = route["file_path"]
+                self.context = route["context"]
                 self.route = route

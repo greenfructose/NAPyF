@@ -1,6 +1,7 @@
+from functools import wraps
 from NAPyF.App import App
 from NAPyF.Types import Route, Method
-from NAPyF.RequestFunctions import *
+from NAPyF.RequestFunctions import default_post
 
 
 def default():
@@ -11,7 +12,6 @@ def default():
         file_path=f'{app.template_directory}/index.html',
         context={'title': 'Default', 'app_name': app.name},
         request_method=Method.GET.value,
-        request_function=no_function
     )
     app.add_route(default_get_route)
     default_post_route = Route(
@@ -20,8 +20,8 @@ def default():
         file_path=f'{app.template_directory}/index.html',
         context={'title': 'Default', 'app_name': app.name},
         request_method=Method.POST.value,
-        request_function=default_post
     )
+    default_post_route.request_function = default_post.__name__
     app.add_route(default_post_route)
     return app
 

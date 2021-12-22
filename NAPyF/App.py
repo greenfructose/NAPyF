@@ -4,7 +4,6 @@ from glob import glob
 from shutil import copyfile
 import Settings
 from NAPyF.Types import Route, Method
-from NAPyF.RequestFunctions import no_function
 import autopep8
 
 
@@ -23,8 +22,7 @@ class App:
                 file_path=f'{self.template_directory}/index.html',
                 context={'title': self.name, 'app_name': self.name},
                 request_method=Method.GET.value,
-                request_function=no_function
-            )
+            ).__dict__
         ]
 
     def generate(self):
@@ -82,4 +80,4 @@ class App:
         if not os.path.isfile(route.file_path):
             file = open(route.file_path, 'w+')
             file.close()
-        self.routes.append(vars(route))
+        self.routes.append(route.__dict__)
