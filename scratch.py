@@ -1,6 +1,11 @@
-from NAPyF import TemplateEngine
+from NAPyF.TemplateEngine import render
 
-sample = './sample.html'
+sample = './default/base/templates/index.html'
+context = {'title': 'Default',
+           'app_name': 'default'}
+html_templates = {'head': 'C:\\Users\\jturney\\PycharmProjects\\NAPyF/default/base/templates/head.html',
+                  'content': 'C:\\Users\\jturney\\PycharmProjects\\NAPyF/default/base/templates/index.html',
+                  'foot': 'C:\\Users\\jturney\\PycharmProjects\\NAPyF/default/base/templates/foot.html'}
 # results = re.findall('{%(.*?)%}', sample, re.MULTILINE)
 # pattern = re.compile('{%(.*)%}', re.DOTALL)
 # results = re.findall('{%((?:.*?\r?\n?)*)%}', sample)
@@ -32,11 +37,5 @@ sample = './sample.html'
 #     result = str(result).replace("    ", "   ")
 #     result = black.format_str(result, mode=mode)
 #     exec(result)
-template_string = TemplateEngine.TemplateReader(sample).get_string()
-parsed_template = TemplateEngine.TemplateParser(template_string)
-code_list = parsed_template.format_code()
-# print(code_list)
-loc_list = parsed_template.get_loc_list()
-template_rebuilder = TemplateEngine.TemplateRenderer(template_string, code_list, loc_list)
-context = {'a': 'buffalo'}
-print(template_rebuilder.render(context=context))
+context["html_templates"] = html_templates
+print(render(context["html_templates"]["content"], context))

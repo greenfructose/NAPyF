@@ -13,6 +13,11 @@ def default():
         context={'title': 'Default', 'app_name': app.name},
         request_method=Method.GET.value,
     )
+    default_get_route.html_templates = {
+        'head': f'{app.template_directory}/head.html',
+        'content': f'{app.template_directory}/index.html',
+        'foot': f'{app.template_directory}/foot.html'
+    }
     app.add_route(default_get_route)
     default_post_route = Route(
         app_name=app.name,
@@ -21,6 +26,11 @@ def default():
         context={'title': 'Default', 'app_name': app.name},
         request_method=Method.POST.value,
     )
+    default_post_route.html_templates = {
+        'head': f'{app.template_directory}/head.html',
+        'content': f'{app.template_directory}/index.html',
+        'foot': f'{app.template_directory}/foot.html'
+    }
     default_post_route.request_function = default_post.__name__
     app.add_route(default_post_route)
     return app

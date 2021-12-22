@@ -25,3 +25,4 @@ class Route(object):
         self.file_path = file_path
         self.context = context
     request_function = None
+    html_templates = {}

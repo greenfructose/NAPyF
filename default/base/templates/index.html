@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{%print(context["title"])%}</title>
-</head>
-<body>
+{%print(render(block["head"], context))%}
 <h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
 <form action="/" method="post">
   <label for="fname">First name:</label><br>
@@ -13,5 +7,4 @@
   <input type="text" id="lname" name="lname" value="Doe"><br><br>
   <input type="submit" value="Submit">
 </form>
-</body>
-</html>
+{%print(render(block["foot"], context))%}

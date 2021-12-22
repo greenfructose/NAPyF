@@ -2,6 +2,7 @@ import sys
 from http.server import BaseHTTPRequestHandler
 from importlib import reload
 import NAPyF.active_routes
+from NAPyF.App import App
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
 from NAPyF.RequestFunctions import active_functions
@@ -75,6 +76,8 @@ class RequestHandler(BaseHTTPRequestHandler):
             if self.path == route["route_path"] and method == route["request_method"]:
                 print('Route match!')
                 self.route_match = True
+                self.app = App(route["app_name"])
                 self.file_path = route["file_path"]
                 self.context = route["context"]
+                self.context["html_templates"] = route["html_templates"]
                 self.route = route

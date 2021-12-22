@@ -52,7 +52,10 @@ class CodeBlock:
             try:
                 _globals = {}
                 _locals = context
-                exec(self.code, {'context': context})
+                exec(self.code, {
+                    'context': context,
+                    'block': context['html_templates'],
+                    'render': render})
             except:
                 print(f'Something wrong with template code: {s}')
             return s.getvalue()
