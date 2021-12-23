@@ -18,56 +18,64 @@ class User(Model):
             display_name='First Name',
             data_type=str,
             max_length=20,
-            data=None
+            data=None,
+            visible=True
         ),
         Field(
             name='last_name',
             display_name='Last Name',
             data_type=str,
             max_length=20,
-            data=None
+            data=None,
+            visible=True
         ),
         Field(
             name='email',
             display_name='Email Address',
             data_type=str,
             max_length=20,
-            data=None
+            data=None,
+            visible=True
         ),
         Field(
             name='phone_number',
             display_name='Phone Number',
             data_type=str,
             max_length=20,
-            data=None
+            data=None,
+            visible=True
         ),
         Field(
             name='username',
             display_name='Username',
             data_type=str,
             max_length=20,
-            data=None
+            data=None,
+            visible=True
         ),
         Field(
             name='password',
             display_name='Password',
             data_type=str,
             max_length=100,
-            data=None
+            data=None,
+            visible=True
         ),
         Field(
             name='auth_level',
             display_name='Authorization Level',
             data_type=int,
             max_length=4,
-            data=0
+            data=0,
+            visible=False
         ),
         Field(
             name='is_verified',
             display_name='Is Verified',
             data_type=bool,
             max_length=100,
-            data=False
+            data=False,
+            visible=False
         ),
     ]
 

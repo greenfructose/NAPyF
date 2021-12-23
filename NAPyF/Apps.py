@@ -42,11 +42,11 @@ def default():
 def admin():
     app = App('admin')
     app.default_route['html_templates'] = {
-    'content': f'{app.template_directory}/index.html'}
+        'content': f'{app.template_directory}/index.html'}
     return app
 
 
 active_apps = [
     default,
-        admin,
+    admin,
 ]

@@ -1,10 +1,4 @@
 {%print(render(block["head"], context))%}
 <h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
-<form action="/" method="post">
-  <label for="fname">First name:</label><br>
-  <input type="text" id="fname" name="fname" value="John"><br>
-  <label for="lname">Last name:</label><br>
-  <input type="text" id="lname" name="lname" value="Doe"><br><br>
-  <input type="submit" value="Submit">
-</form>
+{%print(new_user_form('/', css_mixin))%}
 {%print(render(block["foot"], context))%}

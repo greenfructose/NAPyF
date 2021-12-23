@@ -35,3 +35,4 @@ class Field(TypedDict):
     data_type: Type
     max_length: int
     data: Any
+    visible: bool

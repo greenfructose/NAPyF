@@ -5,6 +5,7 @@ import contextlib
 import re
 import autopep8
 from Settings import CODE_FORMAT_OPTIONS
+from NAPyF.Auth.Forms import *
 
 
 class TemplateReader:
@@ -50,12 +51,17 @@ class CodeBlock:
             context = {}
         with self.stdoutIO() as s:
             try:
+                new_user_form = UserForm().new_user_form
+                css_mixin = bootstrap_css_mixin
                 _globals = {}
                 _locals = context
                 exec(self.code, {
                     'context': context,
                     'block': context['html_templates'],
-                    'render': render})
+                    'render': render,
+                    'new_user_form': new_user_form,
+                    'css_mixin': css_mixin
+                })
             except:
                 print(f'Something wrong with template code: {s}')
             return s.getvalue()
