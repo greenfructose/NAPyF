@@ -1,7 +1,6 @@
 import sqlite3
 from sqlite3 import Error
 
-from NAPyF.Types import Field
 from Settings import DB_TYPE, BASE_DIR
 from NAPyF.Model import Model
 

@@ -13,6 +13,11 @@ def default():
         context={'title': 'Default', 'app_name': app.name},
         request_method=Method.GET.value,
     )
+    app.default_route["html_templates"] = {
+        'head': f'{app.template_directory}/head.html',
+        'content': f'{app.template_directory}/index.html',
+        'foot': f'{app.template_directory}/foot.html'
+    }
     default_get_route.html_templates = {
         'head': f'{app.template_directory}/head.html',
         'content': f'{app.template_directory}/index.html',

@@ -57,7 +57,7 @@ class User(Model):
             name='password',
             display_name='Password',
             data_type=str,
-            max_length=100,
+            max_length=32,
             data=None,
             visible=True
         ),
@@ -79,25 +79,14 @@ class User(Model):
         ),
     ]
 
-    def create_user(self, first_name, last_name, email, phone_number, username, password, auth_level, is_verified):
-        for field in self.fields:
-            if field["name"] == "first_name":
-                field["data"] = first_name
-            if field["name"] == "last_name":
-                field["data"] = last_name
-            if field["name"] == "email":
-                field["data"] = email
-            if field["name"] == "phone_number":
-                field["data"] = phone_number
-            if field["name"] == "username":
-                field["data"] = username
-            if field["name"] == "password":
-                hashed_password = hash_password(password)
-                field["data"] = hashed_password
-            if field["name"] == "auth_level":
-                field["data"] = auth_level
-            if field["name"] == "is_verified":
-                field["data"] = is_verified
+    def create_user(self, **kwargs):
+        for key, value in kwargs.items():
+            for field in self.fields:
+                if field["name"] == key:
+                    field["data"] = kwargs[key]
+                if field["name"] == 'password':
+                    hashed_password = hash_password(kwargs["password"])
+                    field["data"] = hashed_password
         con = open_db_connection()
         insert(con, self)
         con.close()
@@ -122,6 +111,4 @@ def verify_password(stored_password, provided_password):
                                    100000)
     pwd_hash = binascii.hexlify(pwd_hash).decode('ascii')
     return pwd_hash == stored_password
-
-
 
