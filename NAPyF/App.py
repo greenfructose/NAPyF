@@ -15,14 +15,17 @@ class App:
         self.template_directory = self.app_base + '/templates'
         self.local_static_directory = self.app_base + '/local_static'
         self.relative_route_path = '/' + self.name
+        self.html_templates = {
+            'content': f'{self.template_directory}/index.html', }
+        self.default_route = Route(
+            app_name=self.name,
+            route_path=self.relative_route_path,
+            file_path=f'{self.template_directory}/index.html',
+            context={'title': self.name, 'app_name': self.name, },
+            request_method=Method.GET.value,
+        ).__dict__
         self.routes = [
-            Route(
-                app_name=self.name,
-                route_path=self.relative_route_path,
-                file_path=f'{self.template_directory}/index.html',
-                context={'title': self.name, 'app_name': self.name},
-                request_method=Method.GET.value,
-            ).__dict__
+            self.default_route
         ]
 
     def generate(self):
@@ -40,7 +43,8 @@ class App:
         new_app_string = (app_string[
                           :end_app_def] + "def " + self.name + "():\n\t" +
                           "app = App('" + self.name + "')\n\t" +
-                          "return app\n\n\n"
+                          "app.default_route['html_templates'] = {'content': f'{"
+                          "app.template_directory}/index.html'}\n\treturn app\n\n\n "
                           ).expandtabs(4)
         end_active_apps = active_apps.find(']\n')
         new_active_apps = (active_apps[
