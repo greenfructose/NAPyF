@@ -101,8 +101,12 @@ def hash_password(password):
     return (salt + pwd_hash).decode('ascii')
 
 
-def verify_password(stored_password, provided_password):
+def verify_password(username, provided_password):
     """Verify a stored password against one provided by user"""
+    con = open_db_connection()
+    cur = con.cursor()
+    cur.execute('SELECT password FROM users WHERE username = (?)', username)
+    stored_password = cur.fetchone()[0]
     salt = stored_password[:64]
     stored_password = stored_password[64:]
     pwd_hash = hashlib.pbkdf2_hmac('sha512',
@@ -110,5 +114,18 @@ def verify_password(stored_password, provided_password):
                                    salt.encode('ascii'),
                                    100000)
     pwd_hash = binascii.hexlify(pwd_hash).decode('ascii')
+    con.close()
     return pwd_hash == stored_password
+
+
+def list_users():
+    """List of users in DataBase"""
+    user_list = []
+    con = open_db_connection()
+    cur = con.cursor()
+    cur.execute("SELECT users_id, first_name, last_name, email, phone_number, username, auth_level, is_verified from "
+                "users")
+    for row in cur.fetchall():
+        user_list.append(row)
+    return user_list
 

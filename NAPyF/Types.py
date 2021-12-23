@@ -27,6 +27,7 @@ class Route(object):
 
     request_function = None
     html_templates = {}
+    redirect = None
 
 
 class Field(TypedDict):

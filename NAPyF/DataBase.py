@@ -90,3 +90,8 @@ python_type_to_sqlite3_type = {
     bytes: 'BLOB',
     bool: 'BOOLEAN'
 }
+# con = open_db_connection()
+# cur = con.cursor()
+# cur.execute("PRAGMA table_info(users)")
+# print(cur.fetchall())
+# con.close()

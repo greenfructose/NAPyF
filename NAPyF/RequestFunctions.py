@@ -1,7 +1,8 @@
-from NAPyF.Auth.Models import User
+from NAPyF.Auth.Models import User, list_users
 
 
 def default_post(form=None):
+    success = False
     return_data = {}
     if form is None:
         print('No form data posted')
@@ -21,9 +22,30 @@ def default_post(form=None):
         print(return_data)
         user = User()
         user.create_user(**return_data)
-    return str.encode(f'The following data was posted: \n{return_data}')
+        success = True
+    return success
+
+
+def auth_post_user(form=None):
+    success = False
+    data = {}
+    if form is None:
+        print('No form data posted')
+    else:
+        for field in form.keys():
+            data[field] = form[field].value
+        user = User()
+        user.create_user(**data)
+        success = True
+    return success
+
+
+def auth_list_users():
+    return list_users()
 
 
 active_functions = {
-    'default_post': default_post
+    'default_post': default_post,
+    'auth_post_user': auth_post_user,
+    'auth_list_users': auth_list_users,
 }

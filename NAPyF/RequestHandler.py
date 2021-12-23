@@ -6,6 +6,8 @@ from NAPyF.App import App
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
 from NAPyF.RequestFunctions import active_functions
+import NAPyF.Auth.Session as Session
+import NAPyF.Routes as Route
 from Settings import BASE_DIR
 import cgi
 
@@ -18,9 +20,11 @@ class RequestHandler(BaseHTTPRequestHandler):
     route_path = None
     route_match = False
     request_function = None
+    cookie = None
 
     def do_GET(self):
         reload(NAPyF.active_routes)
+        reload(Session)
         # self.set_app()
         # self.get_route_paths(self.app)
         if self.path == "/killserver":
@@ -46,6 +50,8 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'image/x-icon')
         else:
             self.send_header('Content-type', 'text/html')
+            if self.cookie:
+                self.send_header('Set-Cookie', self.cookie)
         self.end_headers()
         self.wfile.write(str.encode(render(self.file_path, self.context)))
         return
@@ -65,7 +71,14 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.context = {'path': self.path}
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
+        if self.route["redirect"]:
+            active_functions[self.route["request_function"]](form=form)
+            Route.route_builder()
+            self.send_response(302)
+            self.send_header('Location', self.route["redirect"])
+            self.end_headers()
         else:
+            Route.route_builder()
             self.send_response(200)
             self.end_headers()
             self.wfile.write(active_functions[self.route["request_function"]](form=form))
@@ -81,3 +94,4 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.context = route["context"]
                 self.context["html_templates"] = route["html_templates"]
                 self.route = route
+        return
