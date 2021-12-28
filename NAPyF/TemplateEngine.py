@@ -46,20 +46,25 @@ class CodeBlock:
         yield stdout
         sys.stdout = old
 
-    def execute(self, context=None):
+    def execute(self, context=None, session=None):
         if context is None:
             context = {}
+        if session is None:
+            session = {}
         with self.stdoutIO() as s:
             try:
+                user_login_form = UserLoginForm().new_login_form
                 new_user_form = UserForm().new_user_form
                 css_mixin = bootstrap_css_mixin
                 _globals = {}
                 _locals = context
                 exec(self.code, {
+                    'session': session,
                     'context': context,
                     'block': context['html_templates'],
                     'render': render,
                     'new_user_form': new_user_form,
+                    'user_login_form': user_login_form,
                     'css_mixin': css_mixin
                 })
             except:
@@ -104,7 +109,7 @@ class TemplateRenderer:
         self.locs = locs
 
     # Takes context dictionary as optional argument
-    def render(self, context=None):
+    def render(self, context=None, session=None):
         if context is None:
             context = {}
         rebuilt_template = ""
@@ -113,16 +118,16 @@ class TemplateRenderer:
             codeblock = CodeBlock(self.locs[i], block)
             # print(self.original_template[oi:self.locs[i][0]])
             rebuilt_template = rebuilt_template + self.original_template[oi:codeblock.loc[0]]
-            rebuilt_template = rebuilt_template + str(codeblock.execute(context=context))
+            rebuilt_template = rebuilt_template + str(codeblock.execute(context=context, session=session))
             oi = codeblock.loc[1]
         rebuilt_template = rebuilt_template + self.original_template[oi:]
         return rebuilt_template
 
 
-def render(template, context=None):
+def render(template, context=None, session=None):
     template_string = TemplateReader(template).get_string()
     parsed_template = TemplateParser(template_string)
     code_list = parsed_template.format_code()
     loc_list = parsed_template.get_loc_list()
     template_rebuilder = TemplateRenderer(template_string, code_list, loc_list)
-    return template_rebuilder.render(context=context)
+    return template_rebuilder.render(context=context, session=session)

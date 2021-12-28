@@ -12,7 +12,7 @@ def route_builder():
     for app in NAPyF.Apps.active_apps:
         temp_app = app()
         for route in temp_app.routes:
-            pprint(route)
+            # pprint(route)
             routes.append(route)
     new_routes_string = f'routes = {routes}'
     new_routes_string = autopep8.fix_code(new_routes_string, CODE_FORMAT_OPTIONS)

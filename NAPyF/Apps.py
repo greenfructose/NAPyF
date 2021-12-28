@@ -1,7 +1,7 @@
 from functools import wraps
 from NAPyF.App import App
 from NAPyF.Types import Route, Method
-from NAPyF.RequestFunctions import default_post, auth_post_user, auth_list_users
+from NAPyF.RequestFunctions import default_post, auth_post_user, auth_list_users, auth_login_user, auth_logout_user
 from Settings import GLOBAL_STATIC_DIRECTORY
 
 
@@ -63,11 +63,12 @@ def profile():
         'content': f'{app.template_directory}/index.html',
         'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
     }
+
     user_registration_get_route = Route(
         app_name=app.name,
         route_path=f'/{app.name}/register',
         file_path=f'{app.template_directory}/register.html',
-        context={'title': 'Default', 'app_name': app.name},
+        context={'title': 'Register', 'app_name': app.name},
         request_method=Method.GET.value,
     )
     user_registration_get_route.html_templates = {
@@ -76,11 +77,12 @@ def profile():
         'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
     }
     app.add_route(user_registration_get_route)
+
     user_registration_post_route = Route(
         app_name=app.name,
         route_path=f'/{app.name}/register',
         file_path=f'{app.template_directory}/register.html',
-        context={'title': 'Default', 'app_name': app.name},
+        context={'title': 'Register', 'app_name': app.name},
         request_method=Method.POST.value,
     )
     user_registration_post_route.html_templates = {
@@ -91,6 +93,62 @@ def profile():
     user_registration_post_route.request_function = auth_post_user.__name__
     user_registration_post_route.redirect = '/profile'
     app.add_route(user_registration_post_route)
+
+    user_login_get_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name}/login',
+        file_path=f'{app.template_directory}/login.html',
+        context={'title': 'Login', 'app_name': app.name},
+        request_method=Method.GET.value,
+    )
+    user_login_get_route.html_templates = {
+        'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
+    }
+    app.add_route(user_login_get_route)
+
+    user_login_post_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name}/login',
+        file_path=f'{app.template_directory}/login.html',
+        context={'title': 'Login', 'app_name': app.name},
+        request_method=Method.POST.value,
+    )
+    user_login_post_route.html_templates = {
+        'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
+    }
+    user_login_post_route.request_function = auth_login_user.__name__
+    user_login_post_route.redirect = '/profile'
+    app.add_route(user_login_post_route)
+
+    user_logout_get_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name}/logout',
+        file_path=f'{app.template_directory}/logout.html',
+        context={'title': 'Logout', 'app_name': app.name},
+        request_method=Method.GET.value,
+    )
+    user_logout_get_route.html_templates = {
+        'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
+    }
+    app.add_route(user_logout_get_route)
+
+    user_logout_post_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name}/logout',
+        file_path=f'{app.template_directory}/logout.html',
+        context={'title': 'Logout', 'app_name': app.name},
+        request_method=Method.POST.value,
+    )
+    user_logout_post_route.request_function = auth_logout_user.__name__
+    user_logout_post_route.redirect = '/'
+    app.add_route(user_logout_post_route)
+
     return app
 
 

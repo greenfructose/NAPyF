@@ -2,6 +2,8 @@ import binascii
 import hashlib
 import os
 
+import password as password
+
 from NAPyF.Model import Model
 from NAPyF.Types import Field
 from NAPyF.DataBase import insert, open_db_connection
@@ -92,6 +94,30 @@ class User(Model):
         con.close()
 
 
+class Login(Model):
+    def __init__(self):
+        super().__init__()
+
+    fields = [
+        Field(
+            name='username',
+            display_name='Username',
+            data_type=str,
+            max_length=20,
+            data=None,
+            visible=True
+        ),
+        Field(
+            name='password',
+            display_name='Password',
+            data_type=str,
+            max_length=32,
+            data=None,
+            visible=True
+        ),
+    ]
+
+
 def hash_password(password):
     """Hash a password for storing."""
     salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
@@ -101,11 +127,14 @@ def hash_password(password):
     return (salt + pwd_hash).decode('ascii')
 
 
-def verify_password(username, provided_password):
+def verify_password(**kwargs):
     """Verify a stored password against one provided by user"""
+    username = kwargs['username']
+    provided_password = kwargs['password']
+    print(kwargs)
     con = open_db_connection()
     cur = con.cursor()
-    cur.execute('SELECT password FROM users WHERE username = (?)', username)
+    cur.execute('SELECT password FROM users WHERE username = (?);', [username])
     stored_password = cur.fetchone()[0]
     salt = stored_password[:64]
     stored_password = stored_password[64:]
@@ -128,4 +157,3 @@ def list_users():
     for row in cur.fetchall():
         user_list.append(row)
     return user_list
-

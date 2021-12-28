@@ -6,10 +6,12 @@ from NAPyF.App import App
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
 from NAPyF.RequestFunctions import active_functions
-import NAPyF.Auth.Session as Session
+from NAPyF.Auth.Session import Session
 import NAPyF.Routes as Route
 from Settings import BASE_DIR
 import cgi
+
+sessions = {}
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -20,11 +22,11 @@ class RequestHandler(BaseHTTPRequestHandler):
     route_path = None
     route_match = False
     request_function = None
-    cookie = None
+    session = None
 
     def do_GET(self):
         reload(NAPyF.active_routes)
-        reload(Session)
+        self.session = Session()
         # self.set_app()
         # self.get_route_paths(self.app)
         if self.path == "/killserver":
@@ -40,6 +42,11 @@ class RequestHandler(BaseHTTPRequestHandler):
         else:
             # self.set_filepath_context(Method.GET.value)
             self.send_response(200)
+            cookies = self.parse_cookies(self.headers['Cookie'])
+            if "sid" in cookies:
+                self.session.user = cookies["sid"] if (cookies["sid"] in sessions) else False
+            else:
+                self.session.user = False
         if self.file_path[-4:] == '.css':
             self.send_header('Content-type', 'text/css')
         elif self.file_path[-5:] == '.json':
@@ -50,13 +57,14 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'image/x-icon')
         else:
             self.send_header('Content-type', 'text/html')
-            if self.cookie:
-                self.send_header('Set-Cookie', self.cookie)
+            if self.session.cookie:
+                self.send_header('Set-Cookie', self.session.cookie)
         self.end_headers()
-        self.wfile.write(str.encode(render(self.file_path, self.context)))
+        self.wfile.write(str.encode(render(self.file_path, self.context, self.session)))
         return
 
     def do_POST(self):
+        global sessions
         reload(NAPyF.active_routes)
         self.match_route(Method.POST.value)
         form = cgi.FieldStorage(
@@ -72,7 +80,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.context = {'path': self.path}
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
         if self.route["redirect"]:
-            active_functions[self.route["request_function"]](form=form)
+            self.session = active_functions[self.route["request_function"]](form=form)
+            if self.session:
+                sessions = sessions | self.session.session
+                print(f"Sessions: {sessions}")
             Route.route_builder()
             self.send_response(302)
             self.send_header('Location', self.route["redirect"])
@@ -95,3 +106,6 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.context["html_templates"] = route["html_templates"]
                 self.route = route
         return
+
+    def parse_cookies(self, cookie_list):
+        return dict(((c.split("=")) for c in cookie_list.split(";"))) if cookie_list else {}

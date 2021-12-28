@@ -1,0 +1,4 @@
+{%print(render(block["head"], context))%}
+<h1>Please login below</h1>
+{%print(user_login_form('/profile/login', css_mixin))%}
+{%print(render(block["foot"], context))%}
