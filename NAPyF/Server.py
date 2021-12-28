@@ -4,19 +4,24 @@ import webbrowser
 from Settings import HTTP_PORT
 from NAPyF.RequestHandler import RequestHandler
 from NAPyF.Routes import route_builder
+from socketserver import ThreadingMixIn
 
-server = HTTPServer
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
+
+
 handler = RequestHandler
-port = HTTP_PORT
+server = ThreadedHTTPServer(('localhost', HTTP_PORT), handler)
 
 
-def run(server_class=server, handler_class=handler, port=port):
-    server_address = ('localhost', port)
+def run():
+    server_address = ('localhost', HTTP_PORT)
     print('Setting routes...')
     route_builder()
-    httpd = server_class(server_address, handler_class)
+    httpd = server
     try:
-        print('Starting httpd on port {}'.format(port))
+        print('Starting httpd on port {}'.format(HTTP_PORT))
         webbrowser.open('http://' + server_address[0] + ':' + str(server_address[1]))
         httpd.serve_forever()
     except KeyboardInterrupt:

@@ -51,9 +51,14 @@ def auth_login_user(form=None):
             data[field] = form[field].value
         if verify_password(**data):
             session = Session()
-            session.sid = session.generate_sid()
+            session.generate_sid()
             session.cookie = f'sid={session.sid}'
-            session.session = {session.sid: {"username", "useragent", "ip address", "expiry"}}
+            session.session = {
+                session.sid: {"username": data['username'],
+                              "useragent": '',
+                              "ip_address": '',
+                              "max_age": 3600,
+                              "expires": ''}}
             return session
         else:
             print('Username or password is incorrect')

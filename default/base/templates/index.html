@@ -1,3 +1,9 @@
 {%print(render(block["head"], context))%}
 <h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
+        <li>
+          {%
+if session.user:
+  print(f'Hello, {session.user}')
+          %}
+        </li>
 {%print(render(block["foot"], context))%}

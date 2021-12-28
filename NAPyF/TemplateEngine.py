@@ -57,7 +57,7 @@ class CodeBlock:
                 new_user_form = UserForm().new_user_form
                 css_mixin = bootstrap_css_mixin
                 _globals = {}
-                _locals = context
+                _locals = context, session
                 exec(self.code, {
                     'session': session,
                     'context': context,
