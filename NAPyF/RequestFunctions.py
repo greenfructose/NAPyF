@@ -51,17 +51,18 @@ def auth_login_user(form=None):
         if verify_password(**data):
             session = Session()
             session.generate_sid()
-            session.cookie = f'sid={session.sid}'
+            session.cookie = f'sid={session.sid}; Max-Age=43200; Path=/; HttpOnly'
             session.session = {
-                session.sid: {"username": data['username'],
-                              "useragent": '',
-                              "ip_address": '',
-                              "max_age": 3600,
-                              "expires": ''}}
+                session.sid: {
+                    "username": data['username'],
+                    "useragent": '',
+                    "ip_address": '',
+                }
+            }
             return session
         else:
             print('Username or password is incorrect')
-            return None
+    return None
 
 
 def auth_logout_user(form=None):

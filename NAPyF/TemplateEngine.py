@@ -47,7 +47,6 @@ class CodeBlock:
         yield stdout
         sys.stdout = old
 
-
     def execute(self, context=None, session=None):
         if context is None:
             context = {}
