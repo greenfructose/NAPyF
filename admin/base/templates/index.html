@@ -17,7 +17,7 @@
         <tbody>
 {%for user in context["users"]:
         print('<tr>')
-        print(f'<th scope="row">{user[0]}</th>')
+        print(f'<th scope="row"><a href="/admin/user/?id={user[0]}">{user[0]}</a></th>')
         print(f'<td>{user[1]}</td>')
         print(f'<td>{user[2]}</td>')
         print(f'<td>{user[3]}</td>')

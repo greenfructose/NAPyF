@@ -56,6 +56,20 @@ def admin():
     }
     app.default_route["context"]['users'] = auth_list_users()
     app.default_route["auth_level_required"] = 1
+    user_edit_get_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name}/admin/user/',
+        file_path=f'{app.template_directory}/user.html',
+        context={'title': 'Edit User', 'app_name': app.name},
+        request_method=Method.GET.value,
+        auth_level_required=1
+    )
+    user_edit_get_route.html_templates = {
+        'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
+        'content': f'{app.template_directory}/user.html',
+        'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
+    }
+    app.add_route(user_edit_get_route)
     return app
 
 

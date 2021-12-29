@@ -2,6 +2,7 @@ import sys
 from http.server import BaseHTTPRequestHandler
 from importlib import reload
 import datetime
+from urllib import parse
 import NAPyF.active_routes
 from NAPyF.App import App
 from NAPyF.Types import Method
@@ -29,6 +30,8 @@ class RequestHandler(BaseHTTPRequestHandler):
     user_session = None
 
     def do_GET(self):
+        path = parse.urlsplit(self.path)
+        params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
         global sessions
         authorized = 0
         self.session = Session()
@@ -47,14 +50,14 @@ class RequestHandler(BaseHTTPRequestHandler):
         # print(self.headers)
         # self.set_app()
         # self.get_route_paths(self.app)
-        if self.path == "/showsessions":
+        if path == "/showsessions":
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(str.encode(str(sessions)))
             return
 
-        if self.path == "/killserver":
+        if path == "/killserver":
             print('Closing the server...')
             self.server.server_close()
             print('Server closed, exiting now')
@@ -65,7 +68,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self.wfile.write(str.encode(render(self.file_path, {'path': self.path}, self.session)))
+            self.wfile.write(str.encode(render(self.file_path, {'path': path}, self.session)))
             return
 
         else:
@@ -78,7 +81,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/401.html'
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
-                self.wfile.write(str.encode(render(self.file_path, {'path': self.path}, self.session)))
+                self.wfile.write(str.encode(render(self.file_path, {'path': path}, self.session)))
                 return
 
             # self.set_filepath_context(Method.GET.value)
@@ -94,23 +97,16 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 self.send_header('Content-type', 'text/html')
             self.end_headers()
+            if self.route.request_function:
+                result = active_functions[self.route["request_function"]](params)
+                self.context = self.context | result
             self.wfile.write(str.encode(render(self.file_path, self.context, self.session)))
             return
 
     def do_POST(self):
         global sessions
-        # self.session = Session()
-        # if self.headers['Cookie'] is not None:
-        #     cookies = self.parse_cookies(self.headers['Cookie'])
-        #     print(f'Cookies: \n {cookies}')
-        #     if "sid" in cookies:
-        #         if cookies["sid"] in sessions:
-        #             self.session = Session()
-        #             self.session.cookie = cookies["sid"]
-        #             self.session.user = sessions[self.session.cookie]['username']
-        # if self.session:
-        #     authorized = auth_level(self.session.user)
-        # else:
+        path = parse.urlsplit(self.path)
+        params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
         authorized = 0
         print(f'Headers:\n{self.headers}')
         reload(NAPyF.active_routes)
@@ -122,7 +118,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 'CONTENT_TYPE': self.headers['Content-Type'],
             }
         )
-        self.match_route(Method.POST.value)
+        self.match_route(Method.POST.value, path)
         if not self.route['route_path'] == "/profile/logout":
             self.session = active_functions[self.route["request_function"]](form=form)
         if self.session:
@@ -135,7 +131,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.route_authorized = True
         if not self.route_authorized:
             self.send_response(401)
-            self.context = {'path': self.path}
+            self.context = {'path': path}
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/401.html'
         else:
             if self.route['route_path'] == "/profile/logout":
@@ -155,7 +151,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 if not self.route_match:
                     self.send_response(404)
-                    self.context = {'path': self.path}
+                    self.context = {'path': path}
                     self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
                 if self.route["redirect"]:
                     Route.route_builder()
@@ -168,6 +164,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 else:
                     Route.route_builder()
                     self.send_response(200)
+                    self.context = self.context | params
                     if self.session:
                         print(f'Setting cookie: {self.session.cookie}')
                         self.send_header('Set-Cookie', self.session.cookie)
@@ -175,9 +172,9 @@ class RequestHandler(BaseHTTPRequestHandler):
                     self.wfile.write(active_functions[self.route["request_function"]](form=form))
                     return
 
-    def match_route(self, method):
+    def match_route(self, method, path):
         for route in NAPyF.active_routes.routes:
-            if self.path == route["route_path"] and method == route["request_method"]:
+            if path == route["route_path"] and method == route["request_method"]:
                 print('Route match!')
                 self.route_match = True
                 self.app = App(route["app_name"])

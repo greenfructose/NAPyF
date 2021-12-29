@@ -175,6 +175,14 @@ def list_users():
     return user_list
 
 
+def get_user(id: int):
+    con = open_db_connection()
+    cur = con.cursor()
+    cur.execute("SELECT users_id, first_name, last_name, email, phone_number, username, auth_level, is_verified from "
+                "users WHERE users_id = (?)", [id])
+    return cur.fetchone()
+
+
 def auth_level(username=None):
     if username is None:
         return 0

@@ -1,4 +1,4 @@
-from NAPyF.Auth.Models import User, list_users
+from NAPyF.Auth.Models import User, list_users, get_user
 from NAPyF.Auth.Session import Session
 from NAPyF.Auth.Models import verify_password
 
@@ -77,10 +77,17 @@ def auth_list_users():
     return list_users()
 
 
+def auth_get_user(**kwargs):
+    user = {}
+    for item in  get_user(kwargs['id']):
+
+
+
 active_functions = {
     'default_post': default_post,
     'auth_post_user': auth_post_user,
     'auth_list_users': auth_list_users,
     'auth_login_user': auth_login_user,
     'auth_logout_user': auth_logout_user,
+    'auth_get_user': auth_get_user,
 }
