@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from NAPyF.Form import Form
-from NAPyF.Auth.Models import User, Login
+from NAPyF.Auth.Models import User, Login, Logout
 
 
 class UserForm(Form):
@@ -70,6 +70,36 @@ class UserLoginForm(Form):
         }
 
         def new_login_form(self, action: str, css_mixin: dict = None):
+            return generate_user_form(self, action, css_mixin)
+
+
+class UserLogoutForm(Form):
+    fields = Logout.fields
+    form_dict = {}
+    for field in fields:
+        input_type = ""
+        if not field["visible"]:
+            input_type = 'hidden'
+        elif field["data_type"] == str or field["data_type"] == int or field["data_type"] == float:
+            if field["name"] == 'email':
+                input_type = 'email'
+            elif field["name"] == 'password':
+                input_type = 'password'
+            else:
+                input_type = "text"
+        elif field["data_type"] == bool:
+            input_type = "checkbox"
+        form_dict[field["name"]] = {
+            'label': field["name"],
+            'input_type': input_type,
+            'id': field["name"],
+            'name': field["name"],
+            'display_name': field["display_name"],
+            'data': field["data"],
+            'visible': field["visible"],
+        }
+
+        def new_logout_form(self, action: str, css_mixin: dict = None):
             return generate_user_form(self, action, css_mixin)
 
 

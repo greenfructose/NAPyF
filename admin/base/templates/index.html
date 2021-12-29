@@ -1,4 +1,4 @@
-{%print(render(block["head"], context))%}
+{%print(render(block["head"], context, session))%}
 <div class="container">
     <h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
     <table class="table">

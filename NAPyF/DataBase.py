@@ -90,8 +90,9 @@ python_type_to_sqlite3_type = {
     bytes: 'BLOB',
     bool: 'BOOLEAN'
 }
-# con = open_db_connection()
-# cur = con.cursor()
-# cur.execute("PRAGMA table_info(users)")
+con = open_db_connection()
+cur = con.cursor()
+cur.execute("UPDATE users SET auth_level = 1 WHERE username = (?);", ['username'])
 # print(cur.fetchall())
-# con.close()
+con.commit()
+con.close()

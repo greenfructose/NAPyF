@@ -118,6 +118,22 @@ class Login(Model):
     ]
 
 
+class Logout(Model):
+    def __init__(self):
+        super().__init__()
+
+    fields = [
+        Field(
+            name='username',
+            display_name='Username',
+            data_type=str,
+            max_length=20,
+            data='{%print(session.user, end="")%}',
+            visible=False
+        )
+    ]
+
+
 def hash_password(password):
     """Hash a password for storing."""
     salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
@@ -157,3 +173,13 @@ def list_users():
     for row in cur.fetchall():
         user_list.append(row)
     return user_list
+
+
+def auth_level(username=None):
+    if username is None:
+        return 0
+    else:
+        con = open_db_connection()
+        cur = con.cursor()
+        cur.execute("SELECT auth_level FROM users WHERE username = (?);", [username])
+        return int(cur.fetchone()[0])

@@ -13,6 +13,7 @@ def default():
         file_path=f'{app.template_directory}/index.html',
         context={'title': 'Default', 'app_name': app.name},
         request_method=Method.GET.value,
+        auth_level_required=0
     )
     app.default_route["html_templates"] = {
         'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
@@ -31,6 +32,7 @@ def default():
         file_path=f'{app.template_directory}/index.html',
         context={'title': 'Default', 'app_name': app.name},
         request_method=Method.POST.value,
+        auth_level_required=0
     )
     default_post_route.html_templates = {
         'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
@@ -53,6 +55,7 @@ def admin():
         'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
     }
     app.default_route["context"]['users'] = auth_list_users()
+    app.default_route["auth_level_required"] = 1
     return app
 
 
@@ -70,6 +73,7 @@ def profile():
         file_path=f'{app.template_directory}/register.html',
         context={'title': 'Register', 'app_name': app.name},
         request_method=Method.GET.value,
+        auth_level_required=0
     )
     user_registration_get_route.html_templates = {
         'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
@@ -84,6 +88,7 @@ def profile():
         file_path=f'{app.template_directory}/register.html',
         context={'title': 'Register', 'app_name': app.name},
         request_method=Method.POST.value,
+        auth_level_required=0
     )
     user_registration_post_route.html_templates = {
         'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
@@ -100,6 +105,7 @@ def profile():
         file_path=f'{app.template_directory}/login.html',
         context={'title': 'Login', 'app_name': app.name},
         request_method=Method.GET.value,
+        auth_level_required=0
     )
     user_login_get_route.html_templates = {
         'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
@@ -114,6 +120,7 @@ def profile():
         file_path=f'{app.template_directory}/login.html',
         context={'title': 'Login', 'app_name': app.name},
         request_method=Method.POST.value,
+        auth_level_required=0
     )
     user_login_post_route.html_templates = {
         'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
@@ -130,6 +137,7 @@ def profile():
         file_path=f'{app.template_directory}/logout.html',
         context={'title': 'Logout', 'app_name': app.name},
         request_method=Method.GET.value,
+        auth_level_required=0
     )
     user_logout_get_route.html_templates = {
         'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
@@ -144,7 +152,13 @@ def profile():
         file_path=f'{app.template_directory}/logout.html',
         context={'title': 'Logout', 'app_name': app.name},
         request_method=Method.POST.value,
+        auth_level_required=0
     )
+    user_logout_post_route.html_templates = {
+        'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
+    }
     user_logout_post_route.request_function = auth_logout_user.__name__
     user_logout_post_route.redirect = '/'
     app.add_route(user_logout_post_route)

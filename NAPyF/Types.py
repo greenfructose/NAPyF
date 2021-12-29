@@ -18,12 +18,13 @@ class Method(Enum):
 
 # Route TypedDict, route_path is url, file_path is file location to server at route
 class Route(object):
-    def __init__(self, app_name, route_path, file_path, request_method, context):
+    def __init__(self, app_name, route_path, file_path, request_method, context, auth_level_required):
         self.app_name = app_name
         self.route_path = route_path
         self.request_method = request_method
         self.file_path = file_path
         self.context = context
+        self.auth_level_required = auth_level_required
 
     request_function = None
     html_templates = {}

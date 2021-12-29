@@ -29,17 +29,16 @@ def default_post(form=None):
 
 
 def auth_post_user(form=None):
-    success = False
     data = {}
     if form is None:
         print('No form data posted')
+        return None
     else:
         for field in form.keys():
             data[field] = form[field].value
         user = User()
         user.create_user(**data)
-        success = True
-    return success
+    return True
 
 
 def auth_login_user(form=None):
@@ -66,10 +65,11 @@ def auth_login_user(form=None):
 
 
 def auth_logout_user(form=None):
-    if form['user']:
-        return form['user']
-    else:
-        print('User not logged in')
+    data = {}
+    for field in form.keys():
+        data[field] = form[field].value
+    print(f'Data: {data}')
+    return data['username']
 
 
 def auth_list_users():
@@ -81,4 +81,5 @@ active_functions = {
     'auth_post_user': auth_post_user,
     'auth_list_users': auth_list_users,
     'auth_login_user': auth_login_user,
+    'auth_logout_user': auth_logout_user,
 }

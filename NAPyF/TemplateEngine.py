@@ -6,6 +6,7 @@ import re
 import autopep8
 from Settings import CODE_FORMAT_OPTIONS
 from NAPyF.Auth.Forms import *
+from NAPyF.Auth.Models import auth_level
 
 
 class TemplateReader:
@@ -46,6 +47,7 @@ class CodeBlock:
         yield stdout
         sys.stdout = old
 
+
     def execute(self, context=None, session=None):
         if context is None:
             context = {}
@@ -53,6 +55,7 @@ class CodeBlock:
             session = {}
         with self.stdoutIO() as s:
             try:
+                user_logout_form = UserLogoutForm().new_logout_form
                 user_login_form = UserLoginForm().new_login_form
                 new_user_form = UserForm().new_user_form
                 css_mixin = bootstrap_css_mixin
@@ -65,6 +68,8 @@ class CodeBlock:
                     'render': render,
                     'new_user_form': new_user_form,
                     'user_login_form': user_login_form,
+                    'user_logout_form': user_logout_form,
+                    'auth_level': auth_level,
                     'css_mixin': css_mixin
                 })
             except:
@@ -124,8 +129,9 @@ class TemplateRenderer:
         return rebuilt_template
 
 
-def render(template, context=None, session=None):
-    template_string = TemplateReader(template).get_string()
+def render(template=None, context=None, session=None, template_string=None):
+    if template_string is None:
+        template_string = TemplateReader(template).get_string()
     parsed_template = TemplateParser(template_string)
     code_list = parsed_template.format_code()
     loc_list = parsed_template.get_loc_list()

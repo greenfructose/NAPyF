@@ -1,4 +1,13 @@
-{%print(render(block["head"], context))%}
-<h1>Please login below</h1>
-{%print(user_login_form('/profile/login', css_mixin))%}
+{%print(render(block["head"], context, session))%}
+<div class="container mx-auto pt-5">
+{%
+if session.user:
+    print(f'<h1>Hello {session.user}!</h1>')
+    print(f'<p>You are already logged in.</p>')
+    print('<p><a href="/profile/logout">Click here</a> to log out.</p>')
+else:
+    print('<h1>Please login below</h1>')
+    print(user_login_form('/profile/login', css_mixin))
+%}
+</div>
 {%print(render(block["foot"], context))%}

@@ -9,7 +9,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">NAPyf</a>
+    <a class="navbar-brand" href="/">NAPyf</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -22,14 +22,28 @@
           <a class="nav-link" href="/default">Default</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/admin">Admin</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/profile">Profile</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/profile/register">Register</a>
-        </li>
+        {%
+if not session.user:
+  print('<li class="nav-item">')
+  print('<a class="nav-link" href="/profile/register">Register</a>')
+  print('</li>')
+  print('<li class="nav-item">')
+  print('<a class="nav-link" href="/profile/login">Login</a>')
+  print('</li>')
+else:
+  print('<li class="nav-item">')
+  print(f'<a class="nav-link" href="/profile/{session.user}">Welcome {session.user}</a>')
+  print('</li>')
+  print('<li class="nav-item">')
+  print('<a class="nav-link" href="/profile/logout">Logout</a>')
+  print('</li>')
+  if auth_level(session.user) > 0:
+    print('<li class="nav-item">')
+    print('<a class="nav-link" href="/admin">Admin</a>')
+    print('</li>')
+        %}
       </ul>
     </div>
   </div>

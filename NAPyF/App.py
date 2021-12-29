@@ -23,6 +23,7 @@ class App:
             file_path=f'{self.template_directory}/index.html',
             context={'title': self.name, 'app_name': self.name, },
             request_method=Method.GET.value,
+            auth_level_required=0
         ).__dict__
         self.routes = [
             self.default_route
