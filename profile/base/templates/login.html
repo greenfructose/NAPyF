@@ -7,7 +7,11 @@ if session.user:
     print('<p><a href="/profile/logout">Click here</a> to log out.</p>')
 else:
     print('<h1>Please login below</h1>')
+    print('<div class="card">')
+    print('<div class="card-body">')
     print(user_login_form('/profile/login', css_mixin))
+    print('</div>')
+    print('</div>')
 %}
 </div>
 {%print(render(block["foot"], context))%}

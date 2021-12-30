@@ -236,6 +236,7 @@ def update_user(id: int, params):
     cur.execute(sql_update_query, data)
     con.commit()
     con.close()
+    return
 
 
 def auth_level(username=None):

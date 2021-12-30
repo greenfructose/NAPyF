@@ -1,5 +1,6 @@
 import sys
 from http.server import BaseHTTPRequestHandler
+from http.cookies import SimpleCookie
 from importlib import reload
 import datetime
 from urllib import parse
@@ -39,7 +40,13 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.session = Session()
         print(self.headers)
         if self.headers['Cookie'] is not None:
-            cookies = self.parse_cookies(self.headers['Cookie'])
+            raw_data = self.headers['Cookie']
+            print(f'Raw data: {raw_data}')
+            cookie = SimpleCookie()
+            cookie.load(raw_data)
+            cookies = {}
+            for key, morsel in cookie.items():
+                cookies[key] = morsel.value
             print(f'Cookies: \n {cookies}')
             if "sid" in cookies:
                 if cookies["sid"] in sessions:
@@ -130,6 +137,22 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.session.session[self.session.sid]['ip_address'] = self.address_string()
             sessions = sessions | self.session.session
             authorized = auth_level(self.session.session[self.session.sid]['username'])
+        elif self.headers['Cookie'] is not None:
+            self.session = Session()
+            if self.headers['Cookie'] is not None:
+                raw_data = self.headers['Cookie']
+                cookie = SimpleCookie()
+                cookie.load(raw_data)
+                cookies = {}
+                for key, morsel in cookie.items():
+                    cookies[key] = morsel.value
+                print(f'Cookies: \n {cookies}')
+                if "sid" in cookies:
+                    if cookies["sid"] in sessions:
+                        self.session.sid = cookies["sid"]
+                        self.session.user = sessions[self.session.sid]['username']
+                        print(f'User: {self.session.user}')
+                        authorized = auth_level(self.session.user)
         if authorized >= self.route['auth_level_required']:
             self.route_authorized = True
         if not self.route_authorized:
@@ -159,7 +182,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 if self.route["redirect"]:
                     Route.route_builder()
                     self.send_response(302)
-                    if self.session:
+                    if self.session.cookie != {}:
                         print(f'Setting cookie: {self.session.cookie}')
                         self.send_header('Set-Cookie', self.session.cookie)
                     self.send_header('Location', self.route["redirect"])
@@ -176,6 +199,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                     return
 
     def match_route(self, method, path):
+        # Route.route_builder()
         for route in NAPyF.active_routes.routes:
             if path == route["route_path"] and method == route["request_method"]:
                 print('Route match!')
@@ -187,5 +211,5 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.route = route
         return
 
-    def parse_cookies(self, cookie_list):
-        return dict(((c.split("=")) for c in cookie_list.split(";"))) if cookie_list else {}
+    # def parse_cookies(self, cookie_list):
+    #     return dict(((c.split("=")) for c in cookie_list.split(";"))) if cookie_list else {}

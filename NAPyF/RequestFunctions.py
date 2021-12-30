@@ -102,6 +102,10 @@ def auth_update_user(form=None, params=None):
     for field in form.keys():
         data[field] = form[field].value
     print(f"Data: {data}")
+    if 'is_verified' not in data:
+        data['is_verified'] = False
+    else:
+        data['is_verified'] = True
     update_user(users_id, data)
     return None
 

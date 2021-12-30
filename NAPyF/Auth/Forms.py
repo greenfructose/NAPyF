@@ -7,6 +7,7 @@ from NAPyF.Auth.Models import User, Login, Logout
 class UserForm(Form):
     fields = User.fields
     form_dict = {}
+    submit_button_label = 'Register'
     for field in fields:
         input_type = ""
         if not field["visible"]:
@@ -46,6 +47,7 @@ class UserForm(Form):
 class UserEditForm(Form):
     fields = User.fields
     form_dict = {}
+    submit_button_label = 'Submit'
     for field in fields:
         input_type = ""
         if field["data_type"] == str or field["data_type"] == int or field["data_type"] == float:
@@ -75,6 +77,7 @@ class UserEditForm(Form):
 class UserLoginForm(Form):
     fields = Login.fields
     form_dict = {}
+    submit_button_label = 'Login'
     for field in fields:
         input_type = ""
         if not field["visible"]:
@@ -105,6 +108,7 @@ class UserLoginForm(Form):
 class UserLogoutForm(Form):
     fields = Logout.fields
     form_dict = {}
+    submit_button_label = 'Logout'
     for field in fields:
         input_type = ""
         if not field["visible"]:
@@ -144,7 +148,6 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
                 invalid_message = 'Password must be between 10 and 32 characters long with at least one uppercase ' \
                                   'letter, one lowercase letter, one number, and one special character (!@#$&*). '
             if user.form_dict[key]["visible"] and 'editable' not in user.form_dict[key]:
-                print('Creating empty form...')
                 field = f'\t<div class ="{css_mixin["div"]}">\n\t\t' \
                         f'<label class="{css_mixin["label"]}" for="{user.form_dict[key]["label"]}">' \
                         f'{user.form_dict[key]["display_name"]}' \
@@ -158,9 +161,8 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
                         f'\t<div class="valid-feedback">Valid.</div>\n' \
                         f'\t<div class="invalid-feedback">{invalid_message}</div>' \
                         f'\t</div>\n'
-            elif user.form_dict[key]["editable"]:
+            elif 'editable'in user.form_dict[key]:
                 required = ""
-                print('Creating prefilled form')
                 checked = ''
                 input_css = 'input'
                 if user.form_dict[key]['input_type'] == 'checkbox':
@@ -171,7 +173,6 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
                     data = ""
                 else:
                     data = '{%print(context["' + user.form_dict[key]["name"] + '"], end="")%}'
-                print(data)
                 field = f'\t<div class ="{css_mixin["div"]}">\n\t\t' \
                         f'<label class="{css_mixin["label"]}" for="{user.form_dict[key]["label"]}">' \
                         f'{user.form_dict[key]["display_name"]}' \
@@ -193,7 +194,7 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
                         f'name="{user.form_dict[key]["name"]}"' \
                         f'value="{user.form_dict[key]["data"]}">'
             form += field
-        form += f'\t<button type="submit" class="{css_mixin["button"]}">Submit</button>\n' \
+        form += f'\t<button type="submit" class="{css_mixin["button"]}">{user.submit_button_label}</button>\n' \
                 f'</form>'
     else:
         for key, value in user.form_dict.items():

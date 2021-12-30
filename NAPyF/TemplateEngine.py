@@ -73,8 +73,8 @@ class CodeBlock:
                     'auth_level': auth_level,
                     'css_mixin': css_mixin
                 })
-            except:
-                print(f'Something wrong with template code: {s}')
+            except SyntaxError as e:
+                print(f'Something wrong with template code: {e}')
             return s.getvalue()
 
 

@@ -6,7 +6,11 @@ if not session.user:
     print('<p><a href="/profile/login">Click here</a> to log in.</p>')
 else:
     print(f'<h1>Are you sure you want to log out {session.user}?</h1>')
+    print('<div class="card">')
+    print('<div class="card-body">')
     print(render(template_string=user_logout_form('/profile/logout', css_mixin), context=context, session=session))
+    print('</div>')
+    print('</div>')
 %}
 </div>
 {%print(render(block["foot"], context))%}
