@@ -1,3 +1,3 @@
-{%print(render(block["head"], context, session))%}
-<h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
-{%print(render(block["foot"], context))%}
+{%p(r(block["head"], context, session))%}
+<h1>The is the default landing page for the {%p(context["app_name"])%} app.</h1>
+{%p(r(block["foot"], context))%}

@@ -1,17 +1,17 @@
-{%print(render(block["head"], context, session))%}
+{%p(r(block["head"], context, session))%}
 <div class="container mx-auto pt-5">
 {%
 if session.user:
-    print(f'<h1>Hello {session.user}!</h1>')
-    print(f'<p>You are already logged in.</p>')
-    print('<p><a href="/profile/logout">Click here</a> to log out.</p>')
+    p(f'<h1>Hello {session.user}!</h1>')
+    p(f'<p>You are already logged in.</p>')
+    p('<p><a href="/profile/logout">Click here</a> to log out.</p>')
 else:
-    print('<h1>Please login below</h1>')
-    print('<div class="card">')
-    print('<div class="card-body">')
-    print(user_login_form('/profile/login', css_mixin))
-    print('</div>')
-    print('</div>')
+    p('<h1>Please login below</h1>')
+    p('<div class="card">')
+    p('<div class="card-body">')
+    p(user_login_form('/profile/login', css_mixin))
+    p('</div>')
+    p('</div>')
 %}
 </div>
-{%print(render(block["foot"], context))%}
+{%p(r(block["foot"], context))%}

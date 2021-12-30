@@ -1,16 +1,16 @@
-{%print(render(block["head"], context, session))%}
+{%p(r(block["head"], context, session))%}
 <div class="container mx-auto pt-5">
 {%
 if not session.user:
-    print(f'<h1>You are not logged in.</h1>')
-    print('<p><a href="/profile/login">Click here</a> to log in.</p>')
+    p(f'<h1>You are not logged in.</h1>')
+    p('<p><a href="/profile/login">Click here</a> to log in.</p>')
 else:
-    print(f'<h1>Are you sure you want to log out {session.user}?</h1>')
-    print('<div class="card">')
-    print('<div class="card-body">')
-    print(render(template_string=user_logout_form('/profile/logout', css_mixin), context=context, session=session))
-    print('</div>')
-    print('</div>')
+    p(f'<h1>Are you sure you want to log out {session.user}?</h1>')
+    p('<div class="card">')
+    p('<div class="card-body">')
+    p(r(template_string=user_logout_form('/profile/logout', css_mixin), context=context, session=session))
+    p('</div>')
+    p('</div>')
 %}
 </div>
-{%print(render(block["foot"], context))%}
+{%p(r(block["foot"], context))%}

@@ -28,7 +28,6 @@ class CodeTag:
     """
     begin, end = "{%", "%}"
 
-
 class CodeBlock:
     """
     Format string in code as Python code and execute it
@@ -62,10 +61,11 @@ class CodeBlock:
                 _globals = {}
                 _locals = context, session
                 exec(self.code, {
+                    'p': print,
                     'session': session,
                     'context': context,
                     'block': context['html_templates'],
-                    'render': render,
+                    'r': render,
                     'new_user_form': new_user_form,
                     'user_login_form': user_login_form,
                     'user_logout_form': user_logout_form,
@@ -109,10 +109,10 @@ class TemplateRenderer:
     Rebuilds template with executed code
     """
 
-    def __init__(self, original_template, code_list, locs):
+    def __init__(self, original_template, code_list, code_locs):
         self.original_template = original_template
         self.code_list = code_list
-        self.locs = locs
+        self.code_locs = code_locs
 
     # Takes context dictionary as optional argument
     def render(self, context=None, session=None):
@@ -121,12 +121,13 @@ class TemplateRenderer:
         rebuilt_template = ""
         oi = 0
         for i, block in enumerate(self.code_list):
-            codeblock = CodeBlock(self.locs[i], block)
+            codeblock = CodeBlock(self.code_locs[i], block)
             # print(self.original_template[oi:self.locs[i][0]])
             rebuilt_template = rebuilt_template + self.original_template[oi:codeblock.loc[0]]
             rebuilt_template = rebuilt_template + str(codeblock.execute(context=context, session=session))
             oi = codeblock.loc[1]
         rebuilt_template = rebuilt_template + self.original_template[oi:]
+
         return rebuilt_template
 
 

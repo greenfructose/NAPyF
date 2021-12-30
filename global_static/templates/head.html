@@ -26,23 +26,23 @@
         </li>
         {%
 if not session.user:
-  print('<li class="nav-item">')
-  print('<a class="nav-link" href="/profile/register">Register</a>')
-  print('</li>')
-  print('<li class="nav-item">')
-  print('<a class="nav-link" href="/profile/login">Login</a>')
-  print('</li>')
+  p('<li class="nav-item">')
+  p('<a class="nav-link" href="/profile/register">Register</a>')
+  p('</li>')
+  p('<li class="nav-item">')
+  p('<a class="nav-link" href="/profile/login">Login</a>')
+  p('</li>')
 else:
-  print('<li class="nav-item">')
-  print(f'<a class="nav-link" href="/profile/{session.user}">Welcome {session.user}</a>')
-  print('</li>')
-  print('<li class="nav-item">')
-  print('<a class="nav-link" href="/profile/logout">Logout</a>')
-  print('</li>')
+  p('<li class="nav-item">')
+  p(f'<a class="nav-link" href="/profile/{session.user}">Welcome {session.user}</a>')
+  p('</li>')
+  p('<li class="nav-item">')
+  p('<a class="nav-link" href="/profile/logout">Logout</a>')
+  p('</li>')
   if auth_level(session.user) > 0:
-    print('<li class="nav-item">')
-    print('<a class="nav-link" href="/admin">Admin</a>')
-    print('</li>')
+    p('<li class="nav-item">')
+    p('<a class="nav-link" href="/admin">Admin</a>')
+    p('</li>')
         %}
       </ul>
     </div>

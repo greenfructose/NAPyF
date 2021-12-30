@@ -1,10 +1,10 @@
-{%print(render(block["head"], context, session))%}
+{%p(r(block["head"], context, session))%}
 <div class="container">
     <h1>Edit User {%print(context["username"])%}</h1>
     <div class="card">
         <div class="card-body">
-{%print(render(template_string=user_edit_form(f'/admin/user/?id={context["id"]}', css_mixin), context=context, session=session))%}
+{%p(r(template_string=user_edit_form(f'/admin/user/?id={context["id"]}', css_mixin), context=context, session=session))%}
         </div>
     </div>
 </div>
-{%print(render(block["foot"], context))%}
+{%p(r(block["foot"], context))%}

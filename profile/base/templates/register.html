@@ -1,4 +1,4 @@
-{%print(render(block["head"], context, session))%}
+{%p(r(block["head"], context, session))%}
 <h1>Please register below</h1>
-{%print(new_user_form('/profile/register', css_mixin))%}
-{%print(render(block["foot"], context))%}
+{%p(new_user_form('/profile/register', css_mixin))%}
+{%p(r(block["foot"], context))%}

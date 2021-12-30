@@ -1,4 +1,4 @@
-{%print(render(block["head"], context, session))%}
+{%p(r(block["head"], context, session))%}
 <div class="container">
     <h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
     <table class="table">
@@ -16,19 +16,19 @@
       </thead>
         <tbody>
 {%for user in context["users"]:
-        print('<tr>')
-        print(f'<th scope="row"><a href="/admin/user/?id={user[0]}">{user[0]}</a></th>')
-        print(f'<td>{user[1]}</td>')
-        print(f'<td>{user[2]}</td>')
-        print(f'<td>{user[3]}</td>')
-        print(f'<td>{user[4]}</td>')
-        print(f'<td>{user[5]}</td>')
-        print(f'<td>{user[6]}</td>')
-        print(f'<td>{user[7]}</td>')
-        print('</tr>')
+        p('<tr>')
+        p(f'<th scope="row"><a href="/admin/user/?id={user[0]}">{user[0]}</a></th>')
+        p(f'<td>{user[1]}</td>')
+        p(f'<td>{user[2]}</td>')
+        p(f'<td>{user[3]}</td>')
+        p(f'<td>{user[4]}</td>')
+        p(f'<td>{user[5]}</td>')
+        p(f'<td>{user[6]}</td>')
+        p(f'<td>{user[7]}</td>')
+        p('</tr>')
 %}
         </tbody>
     </table>
 </div>
 
-{%print(render(block["foot"], context))%}
+{%p(r(block["foot"], context))%}
