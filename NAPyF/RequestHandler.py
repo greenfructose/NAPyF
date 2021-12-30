@@ -115,6 +115,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         global sessions
         path = parse.urlsplit(self.path).path
+        print(f'Path: {path}')
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
         authorized = 0
         print(f'Headers:\n{self.headers}')
@@ -159,6 +160,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_response(401)
             self.context = {'path': path}
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/401.html'
+            return
         else:
             if self.route['route_path'] == "/profile/logout":
                 self.send_response(302)
@@ -174,11 +176,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                     del sessions[session]
                 self.send_header('Location', self.route["redirect"])
                 self.end_headers()
+                return
             else:
                 if not self.route_match:
                     self.send_response(404)
                     self.context = {'path': path}
                     self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
+                    return
                 if self.route["redirect"]:
                     Route.route_builder()
                     self.send_response(302)
@@ -187,6 +191,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                         self.send_header('Set-Cookie', self.session.cookie)
                     self.send_header('Location', self.route["redirect"])
                     self.end_headers()
+                    return
                 else:
                     Route.route_builder()
                     self.send_response(200)

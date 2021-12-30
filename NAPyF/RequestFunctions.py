@@ -1,6 +1,6 @@
 import params as params
 
-from NAPyF.Auth.Models import User, list_users, get_user, update_user
+from NAPyF.Auth.Models import User, list_users, get_user, update_user, delete_user
 from NAPyF.Auth.Session import Session
 from NAPyF.Auth.Models import verify_password
 
@@ -110,6 +110,12 @@ def auth_update_user(form=None, params=None):
     return None
 
 
+def auth_delete_user(form=None, params=None):
+    users_id = params['id']
+    delete_user(users_id)
+    return None
+
+
 active_functions = {
     'default_post': default_post,
     'auth_post_user': auth_post_user,
@@ -118,4 +124,5 @@ active_functions = {
     'auth_logout_user': auth_logout_user,
     'auth_get_user': auth_get_user,
     'auth_update_user': auth_update_user,
+    'auth_delete_user': auth_delete_user,
 }

@@ -241,6 +241,17 @@ def update_user(id: int, params):
     return
 
 
+def delete_user(id: int):
+    sql_delete_query = """
+    DELETE FROM users WHERE users_id = (?);
+    """
+    con = open_db_connection()
+    cur = con.cursor()
+    cur.execute(sql_delete_query, (id,))
+    con.commit()
+    con.close()
+
+
 def auth_level(username=None):
     if username is None:
         return 0

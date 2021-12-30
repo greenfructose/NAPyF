@@ -88,6 +88,22 @@ def admin():
     user_edit_post_route.request_function = auth_update_user.__name__
     app.add_route(user_edit_post_route)
 
+    user_delete_post_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name}/user/delete/',
+        file_path=f'{app.template_directory}/user.html',
+        context={'title': 'Edit User', 'app_name': app.name},
+        request_method=Method.POST.value,
+        auth_level_required=1
+    )
+    user_delete_post_route.html_templates = {
+        'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
+        'content': f'{app.template_directory}/user.html',
+        'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
+    }
+    user_delete_post_route.redirect = '/admin'
+    user_delete_post_route.request_function = auth_delete_user.__name__
+    app.add_route(user_delete_post_route)
     return app
 
 

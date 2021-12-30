@@ -5,6 +5,7 @@ from NAPyF.Auth.Models import User, Login, Logout
 
 
 class UserForm(Form):
+    delete_button = ""
     fields = User.fields
     form_dict = {}
     submit_button_label = 'Register'
@@ -45,6 +46,10 @@ class UserForm(Form):
 
 
 class UserEditForm(Form):
+    delete_button = '<form method="post" action="/admin/user/delete/?id={%p(context[\'id\'])%}">'\
+                    '<input type="hidden" name="null">'\
+                    '<button type="submit" class="btn btn-danger">Delete User</button>' \
+                    '</form>'
     fields = User.fields
     form_dict = {}
     submit_button_label = 'Submit'
@@ -75,6 +80,7 @@ class UserEditForm(Form):
 
 
 class UserLoginForm(Form):
+    delete_button = ""
     fields = Login.fields
     form_dict = {}
     submit_button_label = 'Login'
@@ -106,6 +112,7 @@ class UserLoginForm(Form):
 
 
 class UserLogoutForm(Form):
+    delete_button = ""
     fields = Logout.fields
     form_dict = {}
     submit_button_label = 'Logout'
@@ -137,7 +144,7 @@ class UserLogoutForm(Form):
 
 
 def generate_user_form(user, action: str, css_mixin: dict = None):
-    form = f'<form class="row g-3 was-validated" method="post" action="{action}">\n'
+    form = f'<form class="was-validated" method="post" action="{action}">\n'
     if css_mixin:
         for key, value in user.form_dict.items():
             pattern = ""
@@ -195,7 +202,8 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
                         f'value="{user.form_dict[key]["data"]}">'
             form += field
         form += f'\t<button type="submit" class="{css_mixin["button"]}">{user.submit_button_label}</button>\n' \
-                f'</form>'
+                f'</form>' \
+                f'{user.delete_button}'
     else:
         for key, value in user.form_dict.items():
             pattern = ""
