@@ -210,6 +210,7 @@ def update_user(id: int, params):
             id,
         )
     else:
+        password = hash_password(params["password"])
         sql_update_query = """
         UPDATE users
         SET
@@ -229,7 +230,8 @@ def update_user(id: int, params):
             params["email"],
             params["phone_number"],
             params["username"],
-            params["password"],
+            password,
+            params["auth_level"],
             params["is_verified"],
             id,
         )

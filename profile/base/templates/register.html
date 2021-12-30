@@ -1,4 +1,15 @@
 {%p(r(block["head"], context, session))%}
-<h1>Please register below</h1>
-{%p(new_user_form('/profile/register', css_mixin))%}
+{%
+if session.user:
+    p(f'<h1>Hello {session.user}!</h1>')
+    p(f'<p>You are already registered.</p>')
+    p('<p><a href="/profile/logout">Click here</a> to log out.</p>')
+else:
+    p('<h1>Please register below</h1>')
+    p('<div class="card">')
+    p('<div class="card-body">')
+    p(new_user_form('/profile/register', css_mixin))
+    p('</div>')
+    p('</div>')
+%}
 {%p(r(block["foot"], context))%}

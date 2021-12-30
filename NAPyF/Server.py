@@ -27,6 +27,7 @@ def run():
     except KeyboardInterrupt:
         print('Keyboard Interrupt')
         httpd.shutdown()
+    return
 
 
 if __name__ == "__main__":
