@@ -1,7 +1,6 @@
-from functools import wraps
 from NAPyF.App import App
+from NAPyF.RequestFunctions import *
 from NAPyF.Types import Route, Method
-from NAPyF.RequestFunctions import default_post, auth_post_user, auth_list_users, auth_login_user, auth_logout_user
 from Settings import GLOBAL_STATIC_DIRECTORY
 
 
@@ -58,7 +57,7 @@ def admin():
     app.default_route["auth_level_required"] = 1
     user_edit_get_route = Route(
         app_name=app.name,
-        route_path=f'/{app.name}/admin/user/',
+        route_path=f'/{app.name}/user/',
         file_path=f'{app.template_directory}/user.html',
         context={'title': 'Edit User', 'app_name': app.name},
         request_method=Method.GET.value,
@@ -69,7 +68,26 @@ def admin():
         'content': f'{app.template_directory}/user.html',
         'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
     }
+    user_edit_get_route.request_function = auth_get_user.__name__
     app.add_route(user_edit_get_route)
+
+    user_edit_post_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name}/user/',
+        file_path=f'{app.template_directory}/user.html',
+        context={'title': 'Edit User', 'app_name': app.name},
+        request_method=Method.POST.value,
+        auth_level_required=1
+    )
+    user_edit_post_route.html_templates = {
+        'head': f'{GLOBAL_STATIC_DIRECTORY}/templates/head.html',
+        'content': f'{app.template_directory}/user.html',
+        'foot': f'{GLOBAL_STATIC_DIRECTORY}/templates/foot.html'
+    }
+    user_edit_post_route.redirect = '/admin'
+    user_edit_post_route.request_function = auth_update_user.__name__
+    app.add_route(user_edit_post_route)
+
     return app
 
 

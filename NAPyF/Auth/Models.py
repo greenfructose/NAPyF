@@ -183,6 +183,61 @@ def get_user(id: int):
     return cur.fetchone()
 
 
+def update_user(id: int, params):
+    con = open_db_connection()
+    cur = con.cursor()
+    if 'password' not in params:
+        sql_update_query = """
+        UPDATE users
+        SET
+        first_name = ?,
+        last_name = ?,
+        email = ?,
+        phone_number = ?,
+        username = ?,
+        auth_level = ?,
+        is_verified = ?
+        WHERE users_id = ?
+        """
+        data = (
+            params["first_name"],
+            params["last_name"],
+            params["email"],
+            params["phone_number"],
+            params["username"],
+            params["auth_level"],
+            params["is_verified"],
+            id,
+        )
+    else:
+        sql_update_query = """
+        UPDATE users
+        SET
+        first_name = ?,
+        last_name = ?,
+        email = ?,
+        phone_number = ?,
+        username = ?,
+        password = ?,
+        auth_level = ?,
+        is_verified = ?
+        WHERE users_id = ?
+        """
+        data = (
+            params["first_name"],
+            params["last_name"],
+            params["email"],
+            params["phone_number"],
+            params["username"],
+            params["password"],
+            params["is_verified"],
+            id,
+        )
+    cur.execute(sql_update_query, data)
+    con.commit()
+    con.close()
+
+
 def auth_level(username=None):
     if username is None:
         return 0

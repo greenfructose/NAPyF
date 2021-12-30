@@ -57,6 +57,7 @@ class CodeBlock:
                 user_logout_form = UserLogoutForm().new_logout_form
                 user_login_form = UserLoginForm().new_login_form
                 new_user_form = UserForm().new_user_form
+                user_edit_form = UserEditForm().edit_user_form
                 css_mixin = bootstrap_css_mixin
                 _globals = {}
                 _locals = context, session
@@ -68,6 +69,7 @@ class CodeBlock:
                     'new_user_form': new_user_form,
                     'user_login_form': user_login_form,
                     'user_logout_form': user_logout_form,
+                    'user_edit_form': user_edit_form,
                     'auth_level': auth_level,
                     'css_mixin': css_mixin
                 })

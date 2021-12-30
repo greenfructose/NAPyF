@@ -30,8 +30,10 @@ class RequestHandler(BaseHTTPRequestHandler):
     user_session = None
 
     def do_GET(self):
-        path = parse.urlsplit(self.path)
+        path = parse.urlparse(self.path).path
+        print(f'Path: {path}')
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
+        print(f'Params: {params}')
         global sessions
         authorized = 0
         self.session = Session()
@@ -62,7 +64,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.server.server_close()
             print('Server closed, exiting now')
             sys.exit()
-        self.match_route(Method.GET.value)
+        self.match_route(Method.GET.value, path)
         if not self.route_match:
             self.send_response(404)
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
@@ -97,7 +99,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 self.send_header('Content-type', 'text/html')
             self.end_headers()
-            if self.route.request_function:
+            if 'request_function' in self.route:
                 result = active_functions[self.route["request_function"]](params)
                 self.context = self.context | result
             self.wfile.write(str.encode(render(self.file_path, self.context, self.session)))
@@ -105,7 +107,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         global sessions
-        path = parse.urlsplit(self.path)
+        path = parse.urlsplit(self.path).path
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
         authorized = 0
         print(f'Headers:\n{self.headers}')
@@ -120,7 +122,8 @@ class RequestHandler(BaseHTTPRequestHandler):
         )
         self.match_route(Method.POST.value, path)
         if not self.route['route_path'] == "/profile/logout":
-            self.session = active_functions[self.route["request_function"]](form=form)
+            print(f'Params: {params}')
+            self.session = active_functions[self.route["request_function"]](form=form, params=params)
         if self.session:
             print(f'Headers: \n {self.headers}')
             self.session.session[self.session.sid]['useragent'] = self.headers['User-Agent']
@@ -169,7 +172,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                         print(f'Setting cookie: {self.session.cookie}')
                         self.send_header('Set-Cookie', self.session.cookie)
                     self.end_headers()
-                    self.wfile.write(active_functions[self.route["request_function"]](form=form))
+                    self.wfile.write(active_functions[self.route["request_function"]](form=form, params=params))
                     return
 
     def match_route(self, method, path):
