@@ -132,5 +132,3 @@ def auth_level(username=None):
         cur = con.cursor()
         cur.execute("SELECT auth_level FROM users WHERE username = (?);", [username])
         return int(cur.fetchone()[0])
-
-pprint(list_users())
