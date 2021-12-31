@@ -10,16 +10,26 @@ import autopep8
 class App:
     def __init__(self, name):
         self.name = name
-        self.app_dir = Settings.APPS_DIR + '/' + self.name
+        if self.name == 'Admin':
+            self.app_dir = Settings.BASE_DIR + '/NAPyF/Admin'
+        else:
+            self.app_dir = Settings.APPS_DIR + '/' + self.name
         self.app_base = self.app_dir + '/base'
         self.app_file = self.app_dir + '/App.py'
         self.app_request_func_file = self.app_dir + '/RequestFunctions.py'
         self.template_directory = self.app_base + '/templates'
         self.local_static_directory = self.app_base + '/local_static'
-        self.relative_route_path = '/' + self.name
+        self.relative_route_path = '/' + self.name.lower()
         self.html_templates = {
             'content': f'{self.template_directory}/index.html', }
-        self.default_route = None
+        self.default_route = Route(
+            app_name=self.name,
+            route_path=self.relative_route_path,
+            request_method=Method.GET.value,
+            file_path=self.html_templates["content"],
+            context={},
+            auth_level_required=0,
+        )
         self.routes = [
 
         ]
@@ -27,7 +37,7 @@ class App:
                                  f'from NAPyF.App import App\n' \
                                  f'from NAPyF.Types import Route, Method\n' \
                                  f'from Settings import GLOBAL_STATIC_DIRECTORY\n\n\n' \
-                                 f'def {self.name}():\n' \
+                                 f'def {self.name}(global_static_directory, base_directory):\n' \
                                  f'\tapp = App()\n' \
                                  f'\tapp.default_route = Route(\n' \
                                  f'\t\tapp_name=app.name,\n' \

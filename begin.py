@@ -5,7 +5,7 @@ import sys
 from contextlib import redirect_stdout
 import autopep8
 from NAPyF.Routes import route_builder
-from Settings import TermColors, ROUTES_FILE, CODE_FORMAT_OPTIONS
+from Settings import TermColors, ROUTES_FILE, CODE_FORMAT_OPTIONS, GLOBAL_STATIC_DIRECTORY, BASE_DIR
 from NAPyF.App import App
 import NAPyF.Server
 
@@ -34,7 +34,7 @@ def main(argv):
                 generated = app.generate()
                 while not generated:
                     continue
-                route_builder()
+                route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
                 print('Done!')
             except KeyboardInterrupt:
                 sys.exit()
@@ -49,7 +49,7 @@ def main(argv):
                     killed = app.kill()
                     while not killed:
                         continue
-                    route_builder()
+                    route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
                     print('Done!')
                 elif sure.lower().strip() == 'n':
                     sys.exit()

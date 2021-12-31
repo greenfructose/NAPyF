@@ -3,14 +3,15 @@ from NAPyF.Types import Route, Method
 from NAPyF.Admin.RequestFunctions import auth_post_user, auth_login_user, auth_logout_user
 
 
-def profile(global_static_directory):
+def profile(global_static_directory, base_directory):
     app = App('profile')
-    app.default_route['html_templates'] = {
+    app.default_route.html_templates = {
         'head': f'{global_static_directory}/templates/head.html',
         'content': f'{app.template_directory}/index.html',
         'foot': f'{global_static_directory}/templates/foot.html'
     }
-
+    app.default_route.context = {'title': 'Profile', 'app_name': app.name}
+    app.add_route(app.default_route)
     user_registration_get_route = Route(
         app_name=app.name,
         route_path=f'/{app.name}/register',

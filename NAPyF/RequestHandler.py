@@ -12,9 +12,9 @@ from NAPyF.RequestFunctions import active_functions
 from NAPyF.Admin.Auth.Session import Session
 from NAPyF.Admin.Auth.AuthFunctions import auth_level
 import NAPyF.Routes as Route
-from Settings import BASE_DIR
 import cgi
-
+from pprint import pprint
+from Settings import GLOBAL_STATIC_DIRECTORY, BASE_DIR
 sessions = {}
 
 
@@ -34,6 +34,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         reload(NAPyF.active_routes)
         path = parse.urlparse(self.path).path
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
+        print(params)
         global sessions
         authorized = 0
         print(self.headers)
@@ -45,11 +46,13 @@ class RequestHandler(BaseHTTPRequestHandler):
             for key, morsel in cookie.items():
                 cookies[key] = morsel.value
             if "sid" in cookies:
+                print(f'Cookies: {cookies}')
                 if cookies["sid"] in sessions:
                     self.session = Session()
                     self.session.sid = cookies["sid"]
                     self.session.user = sessions[self.session.sid]['username']
                     authorized = auth_level(self.session.user)
+                    print(f'Set auth level to {authorized}')
         if path == "/showsessions":
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
@@ -74,6 +77,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         else:
             if authorized >= self.route['auth_level_required']:
                 self.route_authorized = True
+                print('User authorized for this route')
             if not self.route_authorized:
                 self.send_response(401)
                 self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/401.html'
@@ -97,16 +101,16 @@ class RequestHandler(BaseHTTPRequestHandler):
                 if 'request_function' in self.route:
                     result = active_functions[self.route["request_function"]](params)
                     self.context = self.context | result
+                if self.session is None:
+                    self.session = Session()
                 self.wfile.write(str.encode(render(self.file_path, self.context, self.session)))
                 return
 
     def do_POST(self):
         global sessions
         path = parse.urlsplit(self.path).path
-        print(f'Path: {path}')
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
         authorized = 0
-        print(f'Headers:\n{self.headers}')
         reload(NAPyF.active_routes)
         form = cgi.FieldStorage(
             fp=self.rfile,
@@ -118,17 +122,15 @@ class RequestHandler(BaseHTTPRequestHandler):
         )
         self.match_route(Method.POST.value, path)
         result = active_functions[self.route["request_function"]](form=form, params=params)
-        if inspect.isclass(result):
-            if result.is_session:
-                self.session = result
+        if isinstance(result, Session):
+            self.session = result
         if self.session:
-            print(f'Headers: \n {self.headers}')
-            self.session.session[self.session.sid]['useragent'] = self.headers['User-Agent']
-            self.session.session[self.session.sid]['ip_address'] = self.address_string()
+            self.session.session['useragent'] = self.headers['User-Agent']
+            self.session.session['ip_address'] = self.address_string()
             if self.session.sid not in sessions:
-                sessions = sessions | self.session.session
-                self.session.cookie = f'sid={self.session.sid}'
-            authorized = auth_level(self.session.session[self.session.sid]['username'])
+                sessions = sessions | {self.session.sid: self.session.session}
+            authorized = auth_level(self.session.session['username'])
+
         elif self.headers['Cookie'] is not None:
             raw_data = self.headers['Cookie']
             cookie = SimpleCookie()
@@ -150,18 +152,19 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/401.html'
             return
         else:
-            if 'logout' in result:
-                self.send_response(302)
-                username = result['username']
-                session_list = []
-                for key, value in sessions.items():
-                    if value['username'] == username:
-                        session_list.append(key)
-                for session in session_list:
-                    del sessions[session]
-                self.send_header('Location', self.route["redirect"])
-                self.end_headers()
-                return
+            if type(result) == dict:
+                if 'logout' in result:
+                    self.send_response(302)
+                    username = result['username']
+                    session_list = []
+                    for key, value in sessions.items():
+                        if value['username'] == username:
+                            session_list.append(key)
+                    for session in session_list:
+                        del sessions[session]
+                    self.send_header('Location', self.route["redirect"])
+                    self.end_headers()
+                    return
             else:
                 if not self.route_match:
                     self.send_response(404)
@@ -169,19 +172,21 @@ class RequestHandler(BaseHTTPRequestHandler):
                     self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/404.html'
                     return
                 if self.route["redirect"]:
-                    Route.route_builder()
+                    Route.route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
                     self.send_response(302)
-                    if self.session.cookie != {}:
-                        self.send_header('Set-Cookie', self.session.cookie)
+                    if self.session:
+                        if self.session.cookie != {}:
+                            self.send_header('Set-Cookie', self.session.cookie)
                     self.send_header('Location', self.route["redirect"])
                     self.end_headers()
                     return
                 else:
-                    Route.route_builder()
+                    Route.route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
                     self.send_response(200)
                     self.context = self.context | params
-                    if self.session.cookie != {}:
-                        self.send_header('Set-Cookie', self.session.cookie)
+                    if self.session:
+                        if self.session.cookie != {}:
+                            self.send_header('Set-Cookie', self.session.cookie)
                     self.end_headers()
                     self.wfile.write(result)
                     return

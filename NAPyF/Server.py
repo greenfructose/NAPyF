@@ -1,7 +1,7 @@
 import sys
 from http.server import HTTPServer
 import webbrowser
-from Settings import HTTP_PORT
+from Settings import HTTP_PORT, GLOBAL_STATIC_DIRECTORY, BASE_DIR
 from NAPyF.RequestHandler import RequestHandler
 from NAPyF.Routes import route_builder
 from socketserver import ThreadingMixIn
@@ -18,7 +18,7 @@ server = ThreadedHTTPServer(('localhost', HTTP_PORT), handler)
 def run():
     server_address = ('localhost', HTTP_PORT)
     print('Setting routes...')
-    route_builder()
+    route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
     httpd = server
     try:
         print('Starting httpd on port {}'.format(HTTP_PORT))

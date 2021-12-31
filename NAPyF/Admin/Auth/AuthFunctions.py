@@ -1,6 +1,7 @@
 import binascii
 import hashlib
 import os
+from pprint import pprint
 
 from NAPyF.DataBase import open_db_connection
 
@@ -131,3 +132,5 @@ def auth_level(username=None):
         cur = con.cursor()
         cur.execute("SELECT auth_level FROM users WHERE username = (?);", [username])
         return int(cur.fetchone()[0])
+
+pprint(list_users())

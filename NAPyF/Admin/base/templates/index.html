@@ -17,7 +17,7 @@
         <tbody>
 {%for user in context["users"]:
         p('<tr>')
-        p(f'<th scope="row"><a href="/admin/user/?id={user[0]}">{user[0]}</a></th>')
+        p(f'<th scope="row"><a href="/admin/user?id={user[0]}">{user[0]}</a></th>')
         p(f'<td>{user[1]}</td>')
         p(f'<td>{user[2]}</td>')
         p(f'<td>{user[3]}</td>')

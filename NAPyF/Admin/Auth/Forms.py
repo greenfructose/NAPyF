@@ -44,7 +44,7 @@ class UserForm(Form):
 
 
 class UserEditForm(Form):
-    delete_button = '<form method="post" action="/Admin/user/delete/?id={%p(context[\'id\'])%}">'\
+    delete_button = '<form method="post" action="/admin/user/delete?id={%p(context[\'id\'])%}">'\
                     '<input type="hidden" name="null">'\
                     '<button type="submit" class="btn btn-danger">Delete User</button>' \
                     '</form>'

@@ -7,7 +7,7 @@ def auth_post_user(form=None, params=None):
     data = {}
     if form is None:
         print('No form data posted')
-        return None
+        return False
     else:
         for field in form.keys():
             data[field] = form[field].value
@@ -28,16 +28,14 @@ def auth_login_user(form=None, params=None):
             session.generate_sid()
             session.cookie = f'sid={session.sid}; Max-Age=43200; Path=/; HttpOnly'
             session.session = {
-                session.sid: {
                     "username": data['username'],
                     "useragent": '',
                     "ip_address": '',
-                }
             }
             return session
         else:
             print('Username or password is incorrect')
-    return None
+    return False
 
 
 def auth_logout_user(form=None, params=None):
@@ -80,13 +78,13 @@ def auth_update_user(form=None, params=None):
     else:
         data['is_verified'] = True
     update_user(users_id, data)
-    return None
+    return True
 
 
 def auth_delete_user(form=None, params=None):
     users_id = params['id']
     delete_user(users_id)
-    return None
+    return True
 
 
 active_functions = {

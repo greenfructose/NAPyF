@@ -42,18 +42,17 @@ def insert(connection, model: Model):
     except Error as e:
         print(e)
     try:
-        if DB_TYPE == 'sqlite3':
-            for field in model.fields:
-                if field["data_type"] == str:
-                    data = field["data"]
-                    values += f"'{data}', "
-                else:
-                    values += f'{field["data"]}, '
-            values = values[:-2]
-            statement = f'INSERT INTO {model.name} VALUES ' \
-                        f'(NULL, {values})'
-            cursor.execute(statement)
-            connection.commit()
+        for field in model.fields:
+            if field["data_type"] == str:
+                data = field["data"]
+                values += f"'{data}', "
+            else:
+                values += f'{field["data"]}, '
+        values = values[:-2]
+        statement = f'INSERT INTO {model.name} VALUES ' \
+                    f'(NULL, {values})'
+        cursor.execute(statement)
+        connection.commit()
     except Error as e:
         print(e)
 
@@ -61,22 +60,21 @@ def insert(connection, model: Model):
 def model_to_sql(model: Model):
     table = model.name
     headers = ''
-    if DB_TYPE == 'sqlite3':
-        headers = f'({table}_id INTEGER PRIMARY KEY AUTOINCREMENT, '
-        for field in model.fields:
-            headers += f'{field["name"]} {python_type_to_sqlite3_type[field["data_type"]]}, '
-        headers = headers[:-2] + ")"
+
+    headers = f'({table}_id INTEGER PRIMARY KEY AUTOINCREMENT, '
+    for field in model.fields:
+        headers += f'{field["name"]} {python_type_to_sqlite3_type[field["data_type"]]}, '
+    headers = headers[:-2] + ")"
     return table, headers
 
 
 def list_tables(connection):
     cursor = connection.cursor()
     try:
-        if DB_TYPE == 'sqlite3':
-            cursor.execute(
-                "SELECT name FROM sqlite_master WHERE type='table';"
-            )
-            print(cursor.fetchall())
+        cursor.execute(
+            "SELECT name FROM sqlite_master WHERE type='table';"
+        )
+        print(cursor.fetchall())
     except Error as e:
         print(e)
 

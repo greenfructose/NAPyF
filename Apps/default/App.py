@@ -3,8 +3,10 @@ from NAPyF.Types import Route, Method
 from Apps.default.RequestFunctions import default_post
 
 
-def default(global_static_directory):
+def default(global_static_directory, base_directory):
     app = App('default')
+    app.default_route.context = {'title': 'Default', 'app_name': app.name}
+    app.add_route(app.default_route)
     default_get_route = Route(
         app_name=app.name,
         route_path='/',
@@ -13,7 +15,7 @@ def default(global_static_directory):
         request_method=Method.GET.value,
         auth_level_required=0
     )
-    app.default_route["html_templates"] = {
+    app.default_route.html_templates = {
         'head': f'{global_static_directory}/templates/head.html',
         'content': f'{app.template_directory}/index.html',
         'foot': f'{global_static_directory}/templates/foot.html'
