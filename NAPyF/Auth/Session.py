@@ -1,4 +1,4 @@
-from random import randint
+from secrets import token_hex
 
 
 class Session(object):
@@ -8,6 +8,4 @@ class Session(object):
     session = {}
 
     def generate_sid(self):
-        self.sid = "".join(str(randint(1, 9)) for _ in range(100))
-
-
+        self.sid = token_hex(32)
