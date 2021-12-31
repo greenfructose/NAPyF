@@ -5,8 +5,8 @@ import contextlib
 import re
 import autopep8
 from Settings import CODE_FORMAT_OPTIONS
-from NAPyF.Auth.Forms import *
-from NAPyF.Auth.Models import auth_level
+from NAPyF.Admin.Auth.Forms import *
+from NAPyF.Admin.Auth.Models import auth_level
 
 
 class TemplateReader:

@@ -1,5 +1,9 @@
 # Settings for server and DB connections
 import os
+
+from Apps.default.App import default
+from Apps.profile.App import profile
+from NAPyF.Admin.App import admin
 from NAPyF.Types import ServerMode
 
 # Set mode to DEV or PROD
@@ -15,7 +19,7 @@ if MODE == "PROD":
 
 # Default Project Directories
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-TEMPLATE_DIR = BASE_DIR + f'/default/base/templates'
+APPS_DIR = BASE_DIR + '/Apps'
 # Global Static Directory
 GLOBAL_STATIC_DIRECTORY = BASE_DIR + '/global_static'
 
@@ -26,6 +30,13 @@ APPS_FILE = BASE_DIR + '/NAPyF/Apps.py'
 
 # App creation templates
 APP_INDEX_TEMPLATE = BASE_DIR + '/NAPyF/FileTemplates/index.html'
+
+# Active Apps List (Register apps here)
+ACTIVE_APPS = [
+    admin,
+    default,
+    profile,
+]
 
 # Database Settings
 DB_TYPE = 'sqlite3'

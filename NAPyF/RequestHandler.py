@@ -1,16 +1,16 @@
 import sys
+import inspect
 from http.server import BaseHTTPRequestHandler
 from http.cookies import SimpleCookie
 from importlib import reload
-import datetime
 from urllib import parse
 import NAPyF.active_routes
 from NAPyF.App import App
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
 from NAPyF.RequestFunctions import active_functions
-from NAPyF.Auth.Session import Session
-from NAPyF.Auth.Models import auth_level
+from NAPyF.Admin.Auth.Session import Session
+from NAPyF.Admin.Auth.AuthFunctions import auth_level
 import NAPyF.Routes as Route
 from Settings import BASE_DIR
 import cgi
@@ -31,34 +31,25 @@ class RequestHandler(BaseHTTPRequestHandler):
     user_session = None
 
     def do_GET(self):
+        reload(NAPyF.active_routes)
         path = parse.urlparse(self.path).path
-        print(f'Path: {path}')
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
-        print(f'Params: {params}')
         global sessions
         authorized = 0
-        self.session = Session()
         print(self.headers)
         if self.headers['Cookie'] is not None:
             raw_data = self.headers['Cookie']
-            print(f'Raw data: {raw_data}')
             cookie = SimpleCookie()
             cookie.load(raw_data)
             cookies = {}
             for key, morsel in cookie.items():
                 cookies[key] = morsel.value
-            print(f'Cookies: \n {cookies}')
             if "sid" in cookies:
                 if cookies["sid"] in sessions:
+                    self.session = Session()
                     self.session.sid = cookies["sid"]
                     self.session.user = sessions[self.session.sid]['username']
-                    print(f'User: {self.session.user}')
                     authorized = auth_level(self.session.user)
-        reload(NAPyF.active_routes)
-
-        # print(self.headers)
-        # self.set_app()
-        # self.get_route_paths(self.app)
         if path == "/showsessions":
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
@@ -81,9 +72,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             return
 
         else:
-            print(f'Route Auth flag is {self.route_authorized}')
             if authorized >= self.route['auth_level_required']:
-                print('Route authorized')
                 self.route_authorized = True
             if not self.route_authorized:
                 self.send_response(401)
@@ -92,25 +81,24 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(str.encode(render(self.file_path, {'path': path}, self.session)))
                 return
-
-            # self.set_filepath_context(Method.GET.value)
-            self.send_response(200)
-            if self.file_path[-4:] == '.css':
-                self.send_header('Content-type', 'text/css')
-            elif self.file_path[-5:] == '.json':
-                self.send_header('Content-type', 'application/javascript')
-            elif self.file_path[-3:] == '.js':
-                self.send_header('Content-type', 'application/javascript')
-            elif self.file_path[-4:] == '.ico':
-                self.send_header('Content-type', 'image/x-icon')
             else:
-                self.send_header('Content-type', 'text/html')
-            self.end_headers()
-            if 'request_function' in self.route:
-                result = active_functions[self.route["request_function"]](params)
-                self.context = self.context | result
-            self.wfile.write(str.encode(render(self.file_path, self.context, self.session)))
-            return
+                self.send_response(200)
+                if self.file_path[-4:] == '.css':
+                    self.send_header('Content-type', 'text/css')
+                elif self.file_path[-5:] == '.json':
+                    self.send_header('Content-type', 'application/javascript')
+                elif self.file_path[-3:] == '.js':
+                    self.send_header('Content-type', 'application/javascript')
+                elif self.file_path[-4:] == '.ico':
+                    self.send_header('Content-type', 'image/x-icon')
+                else:
+                    self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                if 'request_function' in self.route:
+                    result = active_functions[self.route["request_function"]](params)
+                    self.context = self.context | result
+                self.wfile.write(str.encode(render(self.file_path, self.context, self.session)))
+                return
 
     def do_POST(self):
         global sessions
@@ -129,31 +117,31 @@ class RequestHandler(BaseHTTPRequestHandler):
             }
         )
         self.match_route(Method.POST.value, path)
-        if not self.route['route_path'] == "/profile/logout":
-            print(f'Params: {params}')
-            self.session = active_functions[self.route["request_function"]](form=form, params=params)
+        result = active_functions[self.route["request_function"]](form=form, params=params)
+        if inspect.isclass(result):
+            if result.is_session:
+                self.session = result
         if self.session:
             print(f'Headers: \n {self.headers}')
             self.session.session[self.session.sid]['useragent'] = self.headers['User-Agent']
             self.session.session[self.session.sid]['ip_address'] = self.address_string()
-            sessions = sessions | self.session.session
+            if self.session.sid not in sessions:
+                sessions = sessions | self.session.session
+                self.session.cookie = f'sid={self.session.sid}'
             authorized = auth_level(self.session.session[self.session.sid]['username'])
         elif self.headers['Cookie'] is not None:
-            self.session = Session()
-            if self.headers['Cookie'] is not None:
-                raw_data = self.headers['Cookie']
-                cookie = SimpleCookie()
-                cookie.load(raw_data)
-                cookies = {}
-                for key, morsel in cookie.items():
-                    cookies[key] = morsel.value
-                print(f'Cookies: \n {cookies}')
-                if "sid" in cookies:
-                    if cookies["sid"] in sessions:
-                        self.session.sid = cookies["sid"]
-                        self.session.user = sessions[self.session.sid]['username']
-                        print(f'User: {self.session.user}')
-                        authorized = auth_level(self.session.user)
+            raw_data = self.headers['Cookie']
+            cookie = SimpleCookie()
+            cookie.load(raw_data)
+            cookies = {}
+            for key, morsel in cookie.items():
+                cookies[key] = morsel.value
+            if "sid" in cookies:
+                if cookies["sid"] in sessions:
+                    self.session = Session()
+                    self.session.sid = cookies["sid"]
+                    self.session.user = sessions[self.session.sid]['username']
+                    authorized = auth_level(self.session.user)
         if authorized >= self.route['auth_level_required']:
             self.route_authorized = True
         if not self.route_authorized:
@@ -162,16 +150,13 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/401.html'
             return
         else:
-            if self.route['route_path'] == "/profile/logout":
+            if 'logout' in result:
                 self.send_response(302)
-                username = active_functions[self.route["request_function"]](form=form)
+                username = result['username']
                 session_list = []
                 for key, value in sessions.items():
-                    print(f'Key: {key}')
-                    print(f'Username: {value["username"]}')
                     if value['username'] == username:
                         session_list.append(key)
-                print(f'Sessions: {session_list}')
                 for session in session_list:
                     del sessions[session]
                 self.send_header('Location', self.route["redirect"])
@@ -187,7 +172,6 @@ class RequestHandler(BaseHTTPRequestHandler):
                     Route.route_builder()
                     self.send_response(302)
                     if self.session.cookie != {}:
-                        print(f'Setting cookie: {self.session.cookie}')
                         self.send_header('Set-Cookie', self.session.cookie)
                     self.send_header('Location', self.route["redirect"])
                     self.end_headers()
@@ -196,11 +180,10 @@ class RequestHandler(BaseHTTPRequestHandler):
                     Route.route_builder()
                     self.send_response(200)
                     self.context = self.context | params
-                    if self.session:
-                        print(f'Setting cookie: {self.session.cookie}')
+                    if self.session.cookie != {}:
                         self.send_header('Set-Cookie', self.session.cookie)
                     self.end_headers()
-                    self.wfile.write(active_functions[self.route["request_function"]](form=form, params=params))
+                    self.wfile.write(result)
                     return
 
     def match_route(self, method, path):
@@ -216,5 +199,3 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.route = route
         return
 
-    # def parse_cookies(self, cookie_list):
-    #     return dict(((c.split("=")) for c in cookie_list.split(";"))) if cookie_list else {}

@@ -1,21 +1,20 @@
 import sqlite3
 from sqlite3 import Error
 
-from Settings import DB_TYPE, BASE_DIR
+from Settings import BASE_DIR
 from NAPyF.Model import Model
 
 
 def open_db_connection():
     con = None
-    if DB_TYPE == 'sqlite3':
-        try:
-            print(BASE_DIR)
-            con = sqlite3.connect(f'{BASE_DIR}/NAPyF.db')
-        except Error as e:
-            print(e)
-        finally:
-            if con:
-                return con
+    try:
+        print(BASE_DIR)
+        con = sqlite3.connect(f'{BASE_DIR}/NAPyF.db')
+    except Error as e:
+        print(e)
+    finally:
+        if con:
+            return con
 
 
 def create_table(connection, model: Model):

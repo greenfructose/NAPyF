@@ -1,4 +1,3 @@
-from NAPyF.Types import Field
 
 
 class Form(object):
