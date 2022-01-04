@@ -27,7 +27,7 @@ class App:
             route_path=self.relative_route_path,
             request_method=Method.GET.value,
             file_path=self.html_templates["content"],
-            context={},
+            context=None,
             auth_level_required=0,
         )
         self.routes = [
@@ -43,7 +43,7 @@ class App:
                                  f"\t\t'content': f'{{app.template_directory}}/index.html',\n" \
                                  f"\t\t'foot': f'{{global_static_directory}}/templates/foot.html'\n" \
                                  f'\t}}\n' \
-                                 f"\tapp.default_route.context={{'title': app.name, 'app_name': app.name, }},\n" \
+                                 "\tapp.default_route.context={'title': app.name, 'app_name': app.name, },\n" \
                                  f"\tapp.add_route(app.default_route)\n" \
                                  f'\treturn app\n'.expandtabs(4)
 

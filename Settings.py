@@ -12,7 +12,6 @@ if MODE == "PROD":
     HTTP_PORT = 80
     HTTPS_PORT = 443
 
-
 # Default Project Directories
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 APPS_DIR = BASE_DIR + '/Apps'
@@ -27,10 +26,9 @@ APPS_FILE = BASE_DIR + '/NAPyF/Apps.py'
 # App creation templates
 APP_INDEX_TEMPLATE = BASE_DIR + '/NAPyF/FileTemplates/index.html'
 
-
-
 # Database Settings
 DB_TYPE = 'sqlite3'
+
 
 # Terminal Text Colors
 class TermColors:
@@ -67,3 +65,7 @@ class CodeFormatOptions(object):
 
 
 CODE_FORMAT_OPTIONS = CodeFormatOptions()
+
+PASSWORD_REQS = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+PASSWORD_ERROR_TEXT = "Password must be at least 8 characters long with at least one uppercase ' \
+                          'letter, one lowercase letter, one number, and one special character (@$!%*?&). "

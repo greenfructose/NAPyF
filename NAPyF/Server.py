@@ -16,13 +16,13 @@ server = ThreadedHTTPServer(('localhost', HTTP_PORT), handler)
 
 
 def run():
-    server_address = ('localhost', HTTP_PORT)
+    server_address = ('0.0.0.0', HTTP_PORT)
     print('Setting routes...')
     route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
     httpd = server
     try:
         print('Starting httpd on port {}'.format(HTTP_PORT))
-        webbrowser.open('http://' + server_address[0] + ':' + str(server_address[1]))
+        webbrowser.open('http://localhost:' + str(server_address[1]))
         httpd.serve_forever()
     except KeyboardInterrupt:
         print('Keyboard Interrupt')

@@ -1,5 +1,6 @@
 from NAPyF.Form import Form
 from NAPyF.Admin.Auth.Models import User, Login, Logout
+from Settings import PASSWORD_REQS, PASSWORD_ERROR_TEXT
 
 
 class UserForm(Form):
@@ -149,9 +150,8 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
             invalid_message = "Invalid Input"
             required = 'required'
             if user.form_dict[key]['name'] == 'password' or user.form_dict[key]['name'] == 'verify_password':
-                pattern = ' pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{10}$"'
-                invalid_message = 'Password must be between 10 and 32 characters long with at least one uppercase ' \
-                                  'letter, one lowercase letter, one number, and one special character (!@#$&*). '
+                pattern = f' pattern="{PASSWORD_REQS}"'
+                invalid_message = PASSWORD_ERROR_TEXT
             if user.form_dict[key]["visible"] and 'editable' not in user.form_dict[key]:
                 field = f'\t<div class ="{css_mixin["div"]}">\n\t\t' \
                         f'<label class="{css_mixin["label"]}" for="{user.form_dict[key]["label"]}">' \
@@ -206,7 +206,7 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
         for key, value in user.form_dict.items():
             pattern = ""
             if user.form_dict[key]['name'] == 'password' or user.form_dict[key]['name'] == 'verify_password':
-                pattern = ' pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{10,32}$"'
+                pattern = f' pattern="{PASSWORD_REQS}"'
             if user.form_dict[key]["visible"]:
                 field = f'\t<div>\n\t\t' \
                         f'<label for="{user.form_dict[key]["label"]}">' \
