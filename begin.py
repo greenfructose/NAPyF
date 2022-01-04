@@ -1,11 +1,7 @@
 import getopt
-import os
-import io
 import sys
-from contextlib import redirect_stdout
-import autopep8
 from NAPyF.Routes import route_builder
-from Settings import TermColors, ROUTES_FILE, CODE_FORMAT_OPTIONS, GLOBAL_STATIC_DIRECTORY, BASE_DIR
+from Settings import TermColors, GLOBAL_STATIC_DIRECTORY, BASE_DIR
 from NAPyF.App import App
 import NAPyF.Server
 
