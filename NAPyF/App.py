@@ -35,19 +35,17 @@ class App:
         ]
         self.app_file_contents = f'# Define app and routes below\n\n' \
                                  f'from NAPyF.App import App\n' \
-                                 f'from NAPyF.Types import Route, Method\n' \
-                                 f'from Settings import GLOBAL_STATIC_DIRECTORY\n\n\n' \
-                                 f'def {self.name}(global_static_directory, base_directory):\n' \
-                                 f'\tapp = App()\n' \
-                                 f'\tapp.default_route = Route(\n' \
-                                 f'\t\tapp_name=app.name,\n' \
-                                 f'\t\troute_path=app.relative_route_path,\n' \
-                                 f"\t\tfile_path=f'{{app.template_directory}}/index.html',\n" \
-                                 f"\t\tcontext={{'title': app.name, 'app_name': app.name, }},\n" \
-                                 f"\t\trequest_method=Method.GET.value,\n" \
-                                 f"\t\tauth_level_required=0\n" \
-                                 f"\t)\n" \
-                                 f"\tapp.add_route(app.default_route)\n".expandtabs(4)
+                                 f'from NAPyF.Types import Route, Method\n\n\n' \
+                                 f'def {self.name.lower()}(global_static_directory, base_directory):\n' \
+                                 f"\tapp = App('{self.name.lower()}')\n" \
+                                 f'\tapp.default_route.html_templates = {{\n' \
+                                 f"\t\t'head': f'{{global_static_directory}}/templates/head.html',\n" \
+                                 f"\t\t'content': f'{{app.template_directory}}/index.html',\n" \
+                                 f"\t\t'foot': f'{{global_static_directory}}/templates/foot.html'\n" \
+                                 f'\t}}\n' \
+                                 f"\tapp.default_route.context={{'title': app.name, 'app_name': app.name, }},\n" \
+                                 f"\tapp.add_route(app.default_route)\n" \
+                                 f'\treturn app\n'.expandtabs(4)
 
     def generate(self):
         """Generate new app files and routes"""

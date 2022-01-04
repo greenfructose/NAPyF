@@ -5,14 +5,17 @@ from NAPyF.Admin.Auth.AuthFunctions import verify_password, list_users, get_user
 
 def auth_post_user(form=None, params=None):
     data = {}
-    if form is None:
+    if form is None and params is None:
         print('No form data posted')
         return False
     else:
-        for field in form.keys():
-            data[field] = form[field].value
         user = User()
-        user.create_user(**data)
+        if form is not None:
+            for field in form.keys():
+                data[field] = form[field].value
+            user.create_user(**data)
+        if params is not None:
+            user.create_user(**params)
     return True
 
 
@@ -25,7 +28,6 @@ def auth_login_user(form=None, params=None):
             data[field] = form[field].value
         if verify_password(**data):
             session = Session()
-            session.generate_sid()
             session.cookie = f'sid={session.sid}; Max-Age=43200; Path=/; HttpOnly'
             session.session = {
                     "username": data['username'],

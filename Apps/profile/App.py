@@ -14,7 +14,7 @@ def profile(global_static_directory, base_directory):
     app.add_route(app.default_route)
     user_registration_get_route = Route(
         app_name=app.name,
-        route_path=f'/{app.name}/register',
+        route_path=f'/{app.name.lower()}/register',
         file_path=f'{app.template_directory}/register.html',
         context={'title': 'Register', 'app_name': app.name},
         request_method=Method.GET.value,
@@ -29,7 +29,7 @@ def profile(global_static_directory, base_directory):
 
     user_registration_post_route = Route(
         app_name=app.name,
-        route_path=f'/{app.name}/register',
+        route_path=f'/{app.name.lower()}/register',
         file_path=f'{app.template_directory}/register.html',
         context={'title': 'Register', 'app_name': app.name},
         request_method=Method.POST.value,
@@ -46,7 +46,7 @@ def profile(global_static_directory, base_directory):
 
     user_login_get_route = Route(
         app_name=app.name,
-        route_path=f'/{app.name}/login',
+        route_path=f'/{app.name.lower()}/login',
         file_path=f'{app.template_directory}/login.html',
         context={'title': 'Login', 'app_name': app.name},
         request_method=Method.GET.value,
@@ -61,7 +61,7 @@ def profile(global_static_directory, base_directory):
 
     user_login_post_route = Route(
         app_name=app.name,
-        route_path=f'/{app.name}/login',
+        route_path=f'/{app.name.lower()}/login',
         file_path=f'{app.template_directory}/login.html',
         context={'title': 'Login', 'app_name': app.name},
         request_method=Method.POST.value,
@@ -78,7 +78,7 @@ def profile(global_static_directory, base_directory):
 
     user_logout_get_route = Route(
         app_name=app.name,
-        route_path=f'/{app.name}/logout',
+        route_path=f'/{app.name.lower()}/logout',
         file_path=f'{app.template_directory}/logout.html',
         context={'title': 'Logout', 'app_name': app.name},
         request_method=Method.GET.value,
@@ -93,7 +93,7 @@ def profile(global_static_directory, base_directory):
 
     user_logout_post_route = Route(
         app_name=app.name,
-        route_path=f'/{app.name}/logout',
+        route_path=f'/{app.name.lower()}/logout',
         file_path=f'{app.template_directory}/logout.html',
         context={'title': 'Logout', 'app_name': app.name},
         request_method=Method.POST.value,

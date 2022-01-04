@@ -1,0 +1,17 @@
+{%p(r(block["head"], context, session))%}
+<div class="container mx-auto pt-5">
+{%
+if session.user:
+    p(f'<h1>Hello {session.user}!</h1>')
+    p(f'<p>You are already logged in.</p>')
+    p('<p><a href="/admin/logout">Click here</a> to log out.</p>')
+else:
+    p('<h1>Please login below</h1>')
+    p('<div class="card">')
+    p('<div class="card-body">')
+    p(user_login_form('/admin/login', css_mixin))
+    p('</div>')
+    p('</div>')
+%}
+</div>
+{%p(r(block["foot"], context))%}

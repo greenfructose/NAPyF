@@ -1,6 +1,7 @@
 from NAPyF.Types import Route, Method
 from NAPyF.App import App
-from NAPyF.Admin.RequestFunctions import auth_list_users, auth_get_user, auth_update_user, auth_delete_user
+from NAPyF.Admin.RequestFunctions import auth_list_users, auth_get_user, auth_update_user, auth_delete_user, \
+    auth_logout_user, auth_login_user
 
 
 def admin(global_static_directory, base_directory):
@@ -64,4 +65,67 @@ def admin(global_static_directory, base_directory):
     user_delete_post_route.redirect = '/admin'
     user_delete_post_route.request_function = auth_delete_user.__name__
     app.add_route(user_delete_post_route)
+    user_login_get_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name.lower()}/login',
+        file_path=f'{app.template_directory}/login.html',
+        context={'title': 'Login', 'app_name': app.name},
+        request_method=Method.GET.value,
+        auth_level_required=0
+    )
+    user_login_get_route.html_templates = {
+        'head': f'{global_static_directory}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{global_static_directory}/templates/foot.html'
+    }
+    app.add_route(user_login_get_route)
+
+    user_login_post_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name.lower()}/login',
+        file_path=f'{app.template_directory}/login.html',
+        context={'title': 'Login', 'app_name': app.name},
+        request_method=Method.POST.value,
+        auth_level_required=0
+    )
+    user_login_post_route.html_templates = {
+        'head': f'{global_static_directory}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{global_static_directory}/templates/foot.html'
+    }
+    user_login_post_route.request_function = auth_login_user.__name__
+    user_login_post_route.redirect = '/admin'
+    app.add_route(user_login_post_route)
+
+    user_logout_get_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name.lower()}/logout',
+        file_path=f'{app.template_directory}/logout.html',
+        context={'title': 'Logout', 'app_name': app.name},
+        request_method=Method.GET.value,
+        auth_level_required=0
+    )
+    user_logout_get_route.html_templates = {
+        'head': f'{global_static_directory}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{global_static_directory}/templates/foot.html'
+    }
+    app.add_route(user_logout_get_route)
+
+    user_logout_post_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name.lower()}/logout',
+        file_path=f'{app.template_directory}/logout.html',
+        context={'title': 'Logout', 'app_name': app.name},
+        request_method=Method.POST.value,
+        auth_level_required=0
+    )
+    user_logout_post_route.html_templates = {
+        'head': f'{global_static_directory}/templates/head.html',
+        'content': f'{app.template_directory}/login.html',
+        'foot': f'{global_static_directory}/templates/foot.html'
+    }
+    user_logout_post_route.request_function = auth_logout_user.__name__
+    user_logout_post_route.redirect = '/'
+    app.add_route(user_logout_post_route)
     return app
