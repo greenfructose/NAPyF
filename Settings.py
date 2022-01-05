@@ -5,7 +5,7 @@ from NAPyF.Types import ServerMode
 # Set mode to DEV or PROD
 MODE = ServerMode.DEV.name
 if MODE == "DEV":
-    HTTP_PORT = 8080
+    HTTP_PORT = 8081
     HTTPS_PORT = 8443
 
 if MODE == "PROD":
