@@ -12,17 +12,17 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 handler = RequestHandler
-server = ThreadedHTTPServer(('localhost', HTTP_PORT), handler)
+server = ThreadedHTTPServer(('0.0.0.0', HTTP_PORT), handler)
 
 
 def run():
-    server_address = ('', HTTP_PORT)
+
     print('Setting routes...')
     route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
     httpd = server
     try:
         print('Starting httpd on port {}'.format(HTTP_PORT))
-        webbrowser.open('http://localhost:' + str(server_address[1]))
+        webbrowser.open('http://localhost:' + str(HTTP_PORT))
         httpd.serve_forever()
     except KeyboardInterrupt:
         print('Keyboard Interrupt')
