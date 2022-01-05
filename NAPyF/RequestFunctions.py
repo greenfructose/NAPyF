@@ -10,4 +10,5 @@ active_functions = {
     'auth_get_user': auth_get_user,
     'auth_update_user': auth_update_user,
     'auth_delete_user': auth_delete_user,
+    'get_sessions': get_sessions,
 }

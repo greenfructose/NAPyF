@@ -1,0 +1,26 @@
+{%p(r(block["head"], context, session))%}
+<div class="container">
+    <h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Session ID</th>
+          <th scope="col">Username</th>
+          <th scope="col">User Agent</th>
+          <th scope="col">IP Address</th>
+        </tr>
+      </thead>
+        <tbody>
+{%for key, value in context["sessions"].items():
+    p('<tr>')
+    p(f'<th scope="row"><a href="/admin/session?id={key}">{key}</a></th>')
+    p(f'<td>{value["username"]}</td>')
+    p(f'<td>{value["useragent"]}</td>')
+    p(f'<td>{value["ip_address"]}</td>')
+    p('</tr>')
+%}
+        </tbody>
+    </table>
+</div>
+
+{%p(r(block["foot"], context))%}

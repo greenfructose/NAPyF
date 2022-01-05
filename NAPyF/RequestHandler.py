@@ -34,14 +34,9 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         reload(NAPyF.active_routes)
         path = parse.urlparse(self.path).path
-        print(f'Whole requested path: {parse.urlparse(self.path)}')
-        if '.' in path:
-            print(f'filename: {os.path.basename(path)}')
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
-        print(params)
         global sessions
         authorized = 0
-        print(self.headers)
         if self.headers['Cookie'] is not None:
             raw_data = self.headers['Cookie']
             cookie = SimpleCookie()
@@ -65,9 +60,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/killserver":
-            print('Closing the server...')
             self.server.server_close()
-            print('Server closed, exiting now')
             sys.exit()
         self.match_route(Method.GET.value, path)
         if not self.route_match:
@@ -77,11 +70,9 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(str.encode(render(self.file_path, {'path': path}, self.session)))
             return
-
         else:
             if authorized >= self.route['auth_level_required']:
                 self.route_authorized = True
-                print('User authorized for this route')
             if not self.route_authorized:
                 self.send_response(401)
                 self.file_path = BASE_DIR + '/NAPyF/FileTemplates/error_pages/401.html'

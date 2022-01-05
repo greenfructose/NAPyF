@@ -21,7 +21,7 @@ def main(argv):
                 NAPyF.Server.run()
             except KeyboardInterrupt:
                 print("Keyboard Interrupt")
-                sys.exit(0)
+                sys.exit()
         elif opt in ('-n', '--name'):
             try:
                 name = arg.strip()
@@ -54,6 +54,7 @@ def main(argv):
                     sys.exit()
             except KeyboardInterrupt:
                 sys.exit()
+    return
 
 
 if __name__ == '__main__':

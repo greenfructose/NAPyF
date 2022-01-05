@@ -30,9 +30,9 @@ def auth_login_user(form=None, params=None):
             session = Session()
             session.cookie = f'sid={session.sid}; Max-Age=43200; Path=/; HttpOnly'
             session.session = {
-                    "username": data['username'],
-                    "useragent": '',
-                    "ip_address": '',
+                "username": data['username'],
+                "useragent": '',
+                "ip_address": '',
             }
             return session
         else:
@@ -89,6 +89,12 @@ def auth_delete_user(form=None, params=None):
     return True
 
 
+def get_sessions(form=None, params=None):
+    from NAPyF.RequestHandler import sessions
+    session_dict = {'sessions': sessions}
+    return session_dict
+
+
 active_functions = {
     'auth_post_user': auth_post_user,
     'auth_list_users': auth_list_users,
@@ -97,4 +103,5 @@ active_functions = {
     'auth_get_user': auth_get_user,
     'auth_update_user': auth_update_user,
     'auth_delete_user': auth_delete_user,
+    'get_sessions': get_sessions,
 }
