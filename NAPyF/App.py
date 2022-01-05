@@ -17,6 +17,8 @@ class App:
         self.app_base = self.app_dir + '/base'
         self.app_file = self.app_dir + '/App.py'
         self.app_request_func_file = self.app_dir + '/RequestFunctions.py'
+        self.models_file = self.app_dir + '/Models.py'
+        self.forms_file = self.app_dir + '/Forms.py'
         self.template_directory = self.app_base + '/templates'
         self.local_static_directory = self.app_base + '/local_static'
         self.relative_route_path = '/' + self.name.lower()
@@ -59,6 +61,10 @@ class App:
             f.write(self.app_file_contents)
         with open(self.app_request_func_file, 'w+') as f:
             f.write('# Define functions to run on requests below')
+        with open(self.models_file, 'w+') as f:
+            f.write('# Define models below')
+        with open(self.forms_file, 'w+') as f:
+            f.write('# Define forms below')
         autopep8.fix_file(self.app_file, Settings.CODE_FORMAT_OPTIONS)
         return True
 
