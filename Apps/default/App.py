@@ -11,7 +11,7 @@ def default(global_static_directory, base_directory):
         app_name=app.name,
         route_path='/',
         file_path=f'{app.template_directory}/index.html',
-        context={'title': 'Default', 'app_name': app.name},
+        context={'title': 'Default', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.GET.value,
         auth_level_required=0
     )
@@ -30,7 +30,7 @@ def default(global_static_directory, base_directory):
         app_name=app.name,
         route_path='/',
         file_path=f'{app.template_directory}/index.html',
-        context={'title': 'Default', 'app_name': app.name},
+        context={'title': 'Default', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=0
     )

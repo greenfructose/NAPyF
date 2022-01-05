@@ -13,6 +13,7 @@ def admin(global_static_directory, base_directory):
     }
     app.default_route.context = {'title': 'Admin',
                                  'app_name': app.name,
+                                 'static': global_static_directory,
                                  'users': auth_list_users()}
     app.default_route.auth_level_required = 1
     app.add_route(app.default_route)
@@ -20,7 +21,7 @@ def admin(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/user',
         file_path=f'{app.template_directory}/user.html',
-        context={'title': 'Edit User', 'app_name': app.name},
+        context={'title': 'Edit User', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.GET.value,
         auth_level_required=1
     )
@@ -36,7 +37,7 @@ def admin(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/user',
         file_path=f'{app.template_directory}/user.html',
-        context={'title': 'Edit User', 'app_name': app.name},
+        context={'title': 'Edit User', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=1
     )
@@ -53,7 +54,7 @@ def admin(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/user/delete',
         file_path=f'{app.template_directory}/user.html',
-        context={'title': 'Edit User', 'app_name': app.name},
+        context={'title': 'Edit User', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=1
     )
@@ -69,7 +70,7 @@ def admin(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/login',
         file_path=f'{app.template_directory}/login.html',
-        context={'title': 'Login', 'app_name': app.name},
+        context={'title': 'Login', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.GET.value,
         auth_level_required=0
     )
@@ -84,7 +85,7 @@ def admin(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/login',
         file_path=f'{app.template_directory}/login.html',
-        context={'title': 'Login', 'app_name': app.name},
+        context={'title': 'Login', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=0
     )
@@ -101,7 +102,7 @@ def admin(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/logout',
         file_path=f'{app.template_directory}/logout.html',
-        context={'title': 'Logout', 'app_name': app.name},
+        context={'title': 'Logout', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.GET.value,
         auth_level_required=0
     )
@@ -116,7 +117,7 @@ def admin(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/logout',
         file_path=f'{app.template_directory}/logout.html',
-        context={'title': 'Logout', 'app_name': app.name},
+        context={'title': 'Logout', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=0
     )
@@ -128,4 +129,5 @@ def admin(global_static_directory, base_directory):
     user_logout_post_route.request_function = auth_logout_user.__name__
     user_logout_post_route.redirect = '/'
     app.add_route(user_logout_post_route)
+
     return app

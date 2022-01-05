@@ -43,7 +43,8 @@ class App:
                                  f"\t\t'content': f'{{app.template_directory}}/index.html',\n" \
                                  f"\t\t'foot': f'{{global_static_directory}}/templates/foot.html'\n" \
                                  f'\t}}\n' \
-                                 "\tapp.default_route.context={'title': app.name, 'app_name': app.name, },\n" \
+                                 "\tapp.default_route.context={'title': app.name, 'app_name': app.name, 'static': " \
+                                 "global_static_directory,}\n" \
                                  f"\tapp.add_route(app.default_route)\n" \
                                  f'\treturn app\n'.expandtabs(4)
 
@@ -68,7 +69,7 @@ class App:
 
     def add_route(self, route):
         """Adds route to app"""
-        if not os.path.isfile(route.file_path):
+        if not os.path.isfile(route.file_path) and '/static' not in route.route_path:
             file = open(route.file_path, 'w+')
             file.close()
         self.routes.append(route.__dict__)

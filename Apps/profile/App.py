@@ -10,13 +10,13 @@ def profile(global_static_directory, base_directory):
         'content': f'{app.template_directory}/index.html',
         'foot': f'{global_static_directory}/templates/foot.html'
     }
-    app.default_route.context = {'title': 'Profile', 'app_name': app.name}
+    app.default_route.context = {'title': 'Profile', 'app_name': app.name, 'static': global_static_directory,}
     app.add_route(app.default_route)
     user_registration_get_route = Route(
         app_name=app.name,
         route_path=f'/{app.name.lower()}/register',
         file_path=f'{app.template_directory}/register.html',
-        context={'title': 'Register', 'app_name': app.name},
+        context={'title': 'Register', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.GET.value,
         auth_level_required=0
     )
@@ -31,7 +31,7 @@ def profile(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/register',
         file_path=f'{app.template_directory}/register.html',
-        context={'title': 'Register', 'app_name': app.name},
+        context={'title': 'Register', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=0
     )
@@ -48,7 +48,7 @@ def profile(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/login',
         file_path=f'{app.template_directory}/login.html',
-        context={'title': 'Login', 'app_name': app.name},
+        context={'title': 'Login', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.GET.value,
         auth_level_required=0
     )
@@ -63,7 +63,7 @@ def profile(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/login',
         file_path=f'{app.template_directory}/login.html',
-        context={'title': 'Login', 'app_name': app.name},
+        context={'title': 'Login', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=0
     )
@@ -80,7 +80,7 @@ def profile(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/logout',
         file_path=f'{app.template_directory}/logout.html',
-        context={'title': 'Logout', 'app_name': app.name},
+        context={'title': 'Logout', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.GET.value,
         auth_level_required=0
     )
@@ -95,7 +95,7 @@ def profile(global_static_directory, base_directory):
         app_name=app.name,
         route_path=f'/{app.name.lower()}/logout',
         file_path=f'{app.template_directory}/logout.html',
-        context={'title': 'Logout', 'app_name': app.name},
+        context={'title': 'Logout', 'app_name': app.name, 'static': global_static_directory,},
         request_method=Method.POST.value,
         auth_level_required=0
     )

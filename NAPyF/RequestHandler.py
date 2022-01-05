@@ -1,5 +1,6 @@
+import os.path
 import sys
-import inspect
+import mimetypes
 from http.server import BaseHTTPRequestHandler
 from http.cookies import SimpleCookie
 from importlib import reload
@@ -33,6 +34,9 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         reload(NAPyF.active_routes)
         path = parse.urlparse(self.path).path
+        print(f'Whole requested path: {parse.urlparse(self.path)}')
+        if '.' in path:
+            print(f'filename: {os.path.basename(path)}')
         params = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
         print(params)
         global sessions
@@ -87,16 +91,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                 return
             else:
                 self.send_response(200)
-                if self.file_path[-4:] == '.css':
-                    self.send_header('Content-type', 'text/css')
-                elif self.file_path[-5:] == '.json':
-                    self.send_header('Content-type', 'application/javascript')
-                elif self.file_path[-3:] == '.js':
-                    self.send_header('Content-type', 'application/javascript')
-                elif self.file_path[-4:] == '.ico':
-                    self.send_header('Content-type', 'image/x-icon')
-                else:
-                    self.send_header('Content-type', 'text/html')
+                mimetype = mimetypes.guess_type(self.file_path)[0]
+                self.send_header('Content-Type', mimetype)
+                if not mimetype == 'text/html':
+                    self.end_headers()
+                    with open(self.file_path, 'rb') as f:
+                        self.wfile.write(f.read())
+                    return
                 self.end_headers()
                 if 'request_function' in self.route:
                     result = active_functions[self.route["request_function"]](params)
@@ -194,13 +195,19 @@ class RequestHandler(BaseHTTPRequestHandler):
     def match_route(self, method, path):
         # Route.route_builder()
         for route in NAPyF.active_routes.routes:
-            if path == route["route_path"] and method == route["request_method"]:
+            if '/static' in route["route_path"] and '/static' in path:
+                print('Serving static path...')
+                self.route_match = True
+                path = path.replace('/static', '')
+                self.file_path = route["file_path"] + path
+                self.route = route
+                return
+            elif path == route["route_path"] and method == route["request_method"]:
                 print('Route match!')
                 self.route_match = True
-                self.app = App(route["app_name"])
+                # self.app = App(route["app_name"])
                 self.file_path = route["file_path"]
                 self.context = route["context"]
                 self.context["html_templates"] = route["html_templates"]
                 self.route = route
-        return
-
+                return
