@@ -1,3 +1,4 @@
+![NAPyF Logo](https://github.com/greenfructose/NAPyF/blob/main/global_static/images/NAPyF-Alpha.png)
 # NAPyF - Not Another Python Framework
 
 # WIP
