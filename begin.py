@@ -45,7 +45,7 @@ def main(argv):
                     killed = app.kill()
                     while not killed:
                         continue
-                    route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
+                    # route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
                     print('Done!')
                 elif sure.lower().strip() == 'n':
                     sys.exit()

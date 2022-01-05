@@ -65,6 +65,14 @@ class App:
     def kill(self):
         """Deletes app files and routes"""
         rmtree(self.app_dir)
+        new_active_apps = ""
+        with open(Settings.ACTIVE_APPS_FILE, 'r') as f:
+            for line in f.readlines():
+                if self.name not in line:
+                    new_active_apps += line
+        with open(Settings.ACTIVE_APPS_FILE, 'w') as f:
+            f.write(new_active_apps)
+        autopep8.fix_file(Settings.ACTIVE_APPS_FILE, Settings.CODE_FORMAT_OPTIONS)
         return True
 
     def add_route(self, route):

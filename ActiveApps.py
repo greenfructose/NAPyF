@@ -1,6 +1,5 @@
 from Apps.default.App import default
 from Apps.profile.App import profile
-from Apps.test.App import test
 from NAPyF.Admin.App import admin
 from NAPyF.Static.App import static
 
@@ -10,5 +9,4 @@ ACTIVE_APPS = [
     static,
     default,
     profile,
-    test,
 ]

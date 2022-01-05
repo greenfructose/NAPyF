@@ -22,6 +22,7 @@ GLOBAL_STATIC_DIRECTORY = BASE_DIR + '/global_static'
 ROUTE_FILE = BASE_DIR + ' /NAPyF/Routes'
 ROUTES_FILE = BASE_DIR + '/NAPyF/active_routes.py'
 APPS_FILE = BASE_DIR + '/NAPyF/Apps.py'
+ACTIVE_APPS_FILE = BASE_DIR + '/ActiveApps.py'
 
 # App creation templates
 APP_INDEX_TEMPLATE = BASE_DIR + '/NAPyF/FileTemplates/index.html'
