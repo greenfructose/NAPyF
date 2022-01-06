@@ -3,12 +3,12 @@ import sys
 import re
 from NAPyF.Admin.RequestFunctions import auth_post_user
 from pwinput import pwinput
-from Settings import TermColors, PASSWORD_REQS, PASSWORD_ERROR_TEXT
+from Settings import TermColors, PASSWORD_REQS, PASSWORD_ERROR_TEXT, USERNAME_REQS, USERNAME_ERROR_TEXT, NAME_REQS, \
+    NAME_ERROR_TEXT, EMAIL_REQS, EMAIL_ERROR_TEXT
 
 
-def validate_password():
+def validate_password(password):
     while True:
-        password = pwinput("Enter a password (REQUIRED):\n")
         verify_password = ""
         if not re.match(PASSWORD_REQS, password):
             print(PASSWORD_ERROR_TEXT)
@@ -20,14 +20,40 @@ def validate_password():
     return password
 
 
-def validate_username():
-    username = ""
+def validate_username(username):
     while True:
-        if username == "":
-            username = input('Type new admin username (REQUIRED):\n')
+        if not re.match(USERNAME_REQS, username):
+            print(USERNAME_ERROR_TEXT)
         else:
             break
     return username
+
+
+validation_dict = {
+    0: ('Type new admin first name:\n', 'first_name', NAME_REQS, NAME_ERROR_TEXT),
+    1: ('Type new admin last name:\n', 'last_name', NAME_REQS, NAME_ERROR_TEXT),
+    2: ('Type new admin email:\n', 'email', EMAIL_REQS, EMAIL_ERROR_TEXT),
+    3: ('Enter a username (REQUIRED):\n', 'username', USERNAME_REQS, USERNAME_ERROR_TEXT),
+    4: ('Enter a password (REQUIRED):\n', 'password', PASSWORD_REQS, PASSWORD_ERROR_TEXT),
+}
+
+
+def validate(case, prompt, label, reqs, error):
+    while True:
+        if case != 4:
+            test = input(prompt)
+        else:
+            test = pwinput(prompt)
+        if not re.match(reqs, test):
+            print(error)
+        else:
+            if case == 4:
+                verify_password = pwinput("Verify password:\n")
+                if test == verify_password:
+                    break
+            else:
+                break
+    return {label: test}
 
 
 def main(argv):
@@ -40,26 +66,12 @@ def main(argv):
     for opt, arg in opts:
         if opt == "--createadmin":
             try:
-                first_name = input('Type new admin first name:\n')
-                last_name = input('Type new admin last name:\n')
-                email = input('Type new admin email:\n')
-                phone_number = input('Type new admin phone number:\n')
-                username = validate_username()
-                password = validate_password()
-                auth_level = 9001
-                is_verified = True
-                user_attr = {
-                    'first_name': first_name,
-                    'last_name': last_name,
-                    'email': email,
-                    'phone_number': phone_number,
-                    'username': username,
-                    'password': password,
-                    'auth_level': auth_level,
-                    'is_verified': is_verified,
-                }
+                user_attr = {}
+                for key, value in validation_dict.items():
+                    user_attr = user_attr | validate(key, value[0], value[1], value[2], value[3])
+                user_attr = user_attr | {'auth_level': 9001, 'is_verified': True}
                 if auth_post_user(params=user_attr):
-                    print(f'Admin {username} created succesfully.')
+                    print(f'Admin {user_attr["username"]} created succesfully.')
             except KeyboardInterrupt:
                 sys.exit()
 

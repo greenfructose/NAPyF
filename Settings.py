@@ -1,5 +1,6 @@
 # Settings for server and DB connections
 import os
+
 from NAPyF.Types import ServerMode
 
 # Set mode to DEV or PROD
@@ -66,6 +67,15 @@ class CodeFormatOptions(object):
 
 
 CODE_FORMAT_OPTIONS = CodeFormatOptions()
+
+USERNAME_REQS = r'^[A-Za-z0-9]+$'
+USERNAME_ERROR_TEXT = 'Letters and numbers only, no punctuation or special characters.'
+
+NAME_REQS = r'^[a-zA-Z]+$'
+NAME_ERROR_TEXT = 'Letters only, no numbers, punctuation or special characters.'
+
+EMAIL_REQS = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+EMAIL_ERROR_TEXT = 'Please enter a valid email address.'
 
 PASSWORD_REQS = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
 PASSWORD_ERROR_TEXT = "Password must be at least 8 characters long with at least one uppercase ' \

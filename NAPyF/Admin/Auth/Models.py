@@ -35,14 +35,6 @@ class User(Model):
             visible=True
         ),
         Field(
-            name='phone_number',
-            display_name='Phone Number',
-            data_type=str,
-            max_length=20,
-            data=None,
-            visible=True
-        ),
-        Field(
             name='username',
             display_name='Username',
             data_type=str,

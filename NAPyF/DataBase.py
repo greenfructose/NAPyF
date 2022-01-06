@@ -75,8 +75,27 @@ def list_tables(connection):
             "SELECT name FROM sqlite_master WHERE type='table';"
         )
         print(cursor.fetchall())
+        connection.close()
     except Error as e:
         print(e)
+        connection.close()
+
+
+def is_taken(table_name, column_name, data):
+    connection = open_db_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(
+            f"SELECT 1 FROM {table_name} WHERE ?=?", (column_name, data,)
+        )
+        if cursor.rowcount:
+            connection.close()
+            return True
+        connection.close()
+        return False
+    except Error as e:
+        print(e)
+        connection.close()
 
 
 python_type_to_sqlite3_type = {
@@ -87,3 +106,5 @@ python_type_to_sqlite3_type = {
     bytes: 'BLOB',
     bool: 'BOOLEAN'
 }
+if is_taken(open_db_connection(), 'users', 'username', 'admin'):
+    print("Username is taken")

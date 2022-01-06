@@ -1,6 +1,6 @@
 from NAPyF.Form import Form
 from NAPyF.Admin.Auth.Models import User, Login, Logout
-from Settings import PASSWORD_REQS, PASSWORD_ERROR_TEXT
+from Settings import PASSWORD_REQS, PASSWORD_ERROR_TEXT, USERNAME_REQS, USERNAME_ERROR_TEXT, NAME_REQS, NAME_ERROR_TEXT
 
 
 class UserForm(Form):
@@ -152,6 +152,12 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
             if user.form_dict[key]['name'] == 'password' or user.form_dict[key]['name'] == 'verify_password':
                 pattern = f' pattern="{PASSWORD_REQS}"'
                 invalid_message = PASSWORD_ERROR_TEXT
+            if user.form_dict[key]['name'] == 'username':
+                pattern = f' pattern="{USERNAME_REQS}"'
+                invalid_message = USERNAME_ERROR_TEXT
+            if user.form_dict[key]['name'] == 'first_name' or user.form_dict[key]['name'] == 'last_name':
+                pattern = f' pattern="{NAME_REQS}"'
+                invalid_message = NAME_ERROR_TEXT
             if user.form_dict[key]["visible"] and 'editable' not in user.form_dict[key]:
                 field = f'\t<div class ="{css_mixin["div"]}">\n\t\t' \
                         f'<label class="{css_mixin["label"]}" for="{user.form_dict[key]["label"]}">' \

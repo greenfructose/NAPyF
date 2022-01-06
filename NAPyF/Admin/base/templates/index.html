@@ -8,7 +8,6 @@
           <th scope="col">First</th>
           <th scope="col">Last</th>
           <th scope="col">Email</th>
-          <th scope="col">Phone</th>
           <th scope="col">Username</th>
           <th scope="col">Auth Level</th>
           <th scope="col">Is Verified</th>
@@ -23,8 +22,10 @@
         p(f'<td>{user[3]}</td>')
         p(f'<td>{user[4]}</td>')
         p(f'<td>{user[5]}</td>')
-        p(f'<td>{user[6]}</td>')
-        p(f'<td>{user[7]}</td>')
+        if user[6] == 1:
+            p(f'<td>True</td>')
+        else:
+            p(f'<td>False</td>')
         p('</tr>')
 %}
         </tbody>

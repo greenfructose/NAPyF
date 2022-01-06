@@ -40,7 +40,7 @@ def list_users():
     user_list = []
     con = open_db_connection()
     cur = con.cursor()
-    cur.execute("SELECT users_id, first_name, last_name, email, phone_number, username, auth_level, is_verified from "
+    cur.execute("SELECT users_id, first_name, last_name, email, username, auth_level, is_verified from "
                 "users")
     for row in cur.fetchall():
         user_list.append(row)
@@ -50,7 +50,7 @@ def list_users():
 def get_user(id: int):
     con = open_db_connection()
     cur = con.cursor()
-    cur.execute("SELECT users_id, first_name, last_name, email, phone_number, username, auth_level, is_verified from "
+    cur.execute("SELECT users_id, first_name, last_name, email, username, auth_level, is_verified from "
                 "users WHERE users_id = (?)", [id])
     return cur.fetchone()
 
@@ -65,7 +65,6 @@ def update_user(id: int, params):
         first_name = ?,
         last_name = ?,
         email = ?,
-        phone_number = ?,
         username = ?,
         auth_level = ?,
         is_verified = ?
@@ -75,7 +74,6 @@ def update_user(id: int, params):
             params["first_name"],
             params["last_name"],
             params["email"],
-            params["phone_number"],
             params["username"],
             params["auth_level"],
             params["is_verified"],
@@ -89,7 +87,6 @@ def update_user(id: int, params):
         first_name = ?,
         last_name = ?,
         email = ?,
-        phone_number = ?,
         username = ?,
         password = ?,
         auth_level = ?,
@@ -100,7 +97,6 @@ def update_user(id: int, params):
             params["first_name"],
             params["last_name"],
             params["email"],
-            params["phone_number"],
             params["username"],
             password,
             params["auth_level"],

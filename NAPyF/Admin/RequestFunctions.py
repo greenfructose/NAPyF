@@ -60,11 +60,10 @@ def auth_get_user(params):
         'first_name': db_user[1],
         'last_name': db_user[2],
         'email': db_user[3],
-        'phone_number': db_user[4],
-        'username': db_user[5],
+        'username': db_user[4],
         'password': "",
-        'auth_level': db_user[6],
-        'is_verified': db_user[7]
+        'auth_level': db_user[5],
+        'is_verified': db_user[6]
     }
     return user
 
