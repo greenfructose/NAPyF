@@ -16,8 +16,6 @@ server = ThreadedHTTPServer(('0.0.0.0', HTTP_PORT), handler)
 
 
 def run():
-
-    print('Setting routes...')
     route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
     httpd = server
     try:

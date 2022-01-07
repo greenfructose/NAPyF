@@ -50,7 +50,7 @@ else:
   p('<li class="nav-item mx-0 mx-lg-1">')
   p('<a class="nav-link py-3 px-0 px-lg-3 rounded" href="/profile/logout">Logout</a>')
   p('</li>')
-  if auth_level(session.user) > 0:
+  if auth_level(session.user):
     p('<li class="nav-item mx-0 mx-lg-1">')
     p('<a class="nav-link py-3 px-0 px-lg-3 rounded" href="/admin">Admin</a>')
     p('</li>')

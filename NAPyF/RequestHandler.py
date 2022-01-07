@@ -1,4 +1,4 @@
-import os.path
+
 import sys
 import mimetypes
 from http.server import BaseHTTPRequestHandler
@@ -6,7 +6,6 @@ from http.cookies import SimpleCookie
 from importlib import reload
 from urllib import parse
 import NAPyF.active_routes
-from NAPyF.App import App
 from NAPyF.Types import Method
 from NAPyF.TemplateEngine import render
 from NAPyF.RequestFunctions import active_functions
@@ -14,7 +13,6 @@ from NAPyF.Admin.Auth.Session import Session
 from NAPyF.Admin.Auth.AuthFunctions import auth_level
 import NAPyF.Routes as Route
 import cgi
-from pprint import pprint
 from Settings import GLOBAL_STATIC_DIRECTORY, BASE_DIR
 sessions = {}
 
@@ -45,13 +43,11 @@ class RequestHandler(BaseHTTPRequestHandler):
             for key, morsel in cookie.items():
                 cookies[key] = morsel.value
             if "sid" in cookies:
-                print(f'Cookies: {cookies}')
                 if cookies["sid"] in sessions:
                     self.session = Session()
                     self.session.sid = cookies["sid"]
                     self.session.user = sessions[self.session.sid]['username']
                     authorized = auth_level(self.session.user)
-                    print(f'Set auth level to {authorized}')
         if path == "/showsessions":
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
@@ -187,14 +183,12 @@ class RequestHandler(BaseHTTPRequestHandler):
         # Route.route_builder()
         for route in NAPyF.active_routes.routes:
             if '/static' in route["route_path"] and '/static' in path:
-                print('Serving static path...')
                 self.route_match = True
                 path = path.replace('/static', '')
                 self.file_path = route["file_path"] + path
                 self.route = route
                 return
             elif path == route["route_path"] and method == route["request_method"]:
-                print('Route match!')
                 self.route_match = True
                 # self.app = App(route["app_name"])
                 self.file_path = route["file_path"]

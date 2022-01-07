@@ -77,6 +77,6 @@ NAME_ERROR_TEXT = 'Letters only, no numbers, punctuation or special characters.'
 EMAIL_REQS = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 EMAIL_ERROR_TEXT = 'Please enter a valid email address.'
 
-PASSWORD_REQS = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-PASSWORD_ERROR_TEXT = "Password must be at least 8 characters long with at least one uppercase ' \
-                          'letter, one lowercase letter, one number, and one special character (@$!%*?&). "
+PASSWORD_REQS = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+PASSWORD_ERROR_TEXT = "Password must be at least 8 characters long with at least one uppercase  \
+                          letter, one lowercase letter, one number, and one special character (@$!%*?&). "

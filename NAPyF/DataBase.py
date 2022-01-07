@@ -8,7 +8,6 @@ from NAPyF.Model import Model
 def open_db_connection():
     con = None
     try:
-        print(BASE_DIR)
         con = sqlite3.connect(f'{BASE_DIR}/NAPyF.db')
     except Error as e:
         print(e)

@@ -75,6 +75,7 @@ class CodeBlock:
                 })
             except SyntaxError as e:
                 print(f'Something wrong with template code: {e}')
+                print(s.getvalue())
             return s.getvalue()
 
 
