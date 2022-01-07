@@ -106,5 +106,3 @@ python_type_to_sqlite3_type = {
     bytes: 'BLOB',
     bool: 'BOOLEAN'
 }
-if is_taken(open_db_connection(), 'users', 'username', 'admin'):
-    print("Username is taken")

@@ -161,7 +161,7 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
             if user.form_dict[key]["visible"] and 'editable' not in user.form_dict[key]:
                 field = f'\t<div class ="{css_mixin["div"]}">\n\t\t' \
                         f'<label class="{css_mixin["label"]}" for="{user.form_dict[key]["label"]}">' \
-                        f'{user.form_dict[key]["display_name"]}' \
+                        f'<p>{user.form_dict[key]["display_name"]}</p>' \
                         f'</label>\n\t\t' \
                         f'<input ' \
                         f'class="{css_mixin["input"]}" ' \
