@@ -58,7 +58,6 @@ def insert(connection, model: Model):
         print(e)
 
 
-
 def model_to_sql(model: Model):
     table = model.name
     headers = ''
@@ -106,5 +105,5 @@ python_type_to_sqlite3_type = {
     float: 'REAL',
     str: 'TEXT',
     bytes: 'BLOB',
-    bool: 'BOOLEAN'
+    bool: 'BOOLEAN',
 }

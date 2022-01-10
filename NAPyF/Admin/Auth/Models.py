@@ -7,8 +7,7 @@ from NAPyF.Admin.Auth.AuthFunctions import hash_password
 class User(Model):
     def __init__(self):
         super().__init__()
-        self.id = None
-    name = 'users'
+    name = 'user'
     fields = [
         Field(
             name='first_name',
@@ -77,7 +76,7 @@ class User(Model):
                     hashed_password = hash_password(kwargs["password"])
                     field["data"] = hashed_password
         con = open_db_connection()
-        self.id = insert(con, self)
+        insert(con, self)
         con.close()
 
 

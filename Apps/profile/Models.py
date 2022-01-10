@@ -10,11 +10,11 @@ class Profile(Model):
     def __init__(self):
         super().__init__()
 
-    name = 'profiles'
+    name = 'profile'
     fields = [
         Field(
-            name='profiles_id',
-            display_name='Profile ID',
+            name='user_id',
+            display_name='User ID',
             data_type=int,
             max_length=20,
             data=None,
