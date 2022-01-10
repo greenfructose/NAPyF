@@ -1,35 +1,31 @@
 {%p(r(block["head"], context, session))%}
 <div class="container">
     <h1>The is the default landing page for the {%print(context["app_name"])%} app.</h1>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">User ID</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Email</th>
-          <th scope="col">Username</th>
-          <th scope="col">Auth Level</th>
-          <th scope="col">Is Verified</th>
-        </tr>
-      </thead>
-        <tbody>
-{%for user in context["users"]:
-        p('<tr>')
-        p(f'<th scope="row"><a href="/admin/user?id={user[0]}">{user[0]}</a></th>')
-        p(f'<td>{user[1]}</td>')
-        p(f'<td>{user[2]}</td>')
-        p(f'<td>{user[3]}</td>')
-        p(f'<td>{user[4]}</td>')
-        p(f'<td>{user[5]}</td>')
-        if user[6] == 1:
-            p(f'<td>True</td>')
-        else:
-            p(f'<td>False</td>')
-        p('</tr>')
+{%
+for key, item in context['admin_objects'].items():
+    p(f'<a class="btn btn-primary" type="button" data-bs-toggle="collapse" href="#{key}TableCollapse">{unslug(key)}s</a>')
+    p(f'<div class="collapse" id="{key}TableCollapse">')
+    print('<table class="table">')
+    print('<thead>')
+    for index, d in enumerate(item):
+        print('<tr>')
+        for k, v in d.items():
+            if index == 0:
+                print(f'<th scope="col">{unslug(k)}</th>')
+        print('</tr>')
+        print('</thead>')
+        print('<tbody>')
+        print('<tr>')
+        for k, v in d.items():
+            if '_id' in k:
+                print(f'<th scope="row"><a href="/{slug_to_path(key)}?id={v}">{v}</a></th>')
+            else:
+                print(f'<td>{v}</td>')
+        print('</tr>')
+    print('</tbody>')
+    print('</table>')
+    p('</div>')
 %}
-        </tbody>
-    </table>
 </div>
 
 {%p(r(block["foot"], context))%}

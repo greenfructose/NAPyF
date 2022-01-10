@@ -51,9 +51,12 @@ def insert(connection, model: Model):
         statement = f'INSERT INTO {model.name} VALUES ' \
                     f'(NULL, {values})'
         cursor.execute(statement)
+        id = cursor.lastrowid
         connection.commit()
+        return id
     except Error as e:
         print(e)
+
 
 
 def model_to_sql(model: Model):

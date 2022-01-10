@@ -19,7 +19,6 @@ def verify_password(**kwargs):
     """Verify a stored password against one provided by user"""
     username = kwargs['username']
     provided_password = kwargs['password']
-    print(kwargs)
     con = open_db_connection()
     cur = con.cursor()
     cur.execute('SELECT password FROM users WHERE username = (?);', [username])
@@ -43,7 +42,15 @@ def list_users():
     cur.execute("SELECT users_id, first_name, last_name, email, username, auth_level, is_verified from "
                 "users")
     for row in cur.fetchall():
-        user_list.append(row)
+        user_list.append({
+            "users_id": row[0],
+            "first_name": row[1],
+            "last_name": row[2],
+            "email": row[3],
+            "username": row[4],
+            "auth_level": row[5],
+            "is_verified": row[6],
+        })
     return user_list
 
 

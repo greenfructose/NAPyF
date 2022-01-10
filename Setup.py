@@ -70,7 +70,7 @@ def main(argv):
                 for key, value in validation_dict.items():
                     user_attr = user_attr | validate(key, value[0], value[1], value[2], value[3])
                 user_attr = user_attr | {'auth_level': 9001, 'is_verified': True}
-                if auth_post_user(params=user_attr):
+                if auth_post_user(params=user_attr) is not None:
                     print(f'Admin {user_attr["username"]} created succesfully.')
             except KeyboardInterrupt:
                 sys.exit()

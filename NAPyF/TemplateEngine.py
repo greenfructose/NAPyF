@@ -7,6 +7,7 @@ import autopep8
 from Settings import CODE_FORMAT_OPTIONS
 from NAPyF.Admin.Auth.Forms import *
 from NAPyF.Admin.Auth.AuthFunctions import auth_level
+from NAPyF.TemplateTags import *
 
 
 class TemplateReader:
@@ -61,6 +62,8 @@ class CodeBlock:
                 _globals = {}
                 _locals = context, session
                 exec(self.code, {
+                    'unslug': unslug,
+                    'slug_to_path': slug_to_path,
                     'p': print,
                     'session': session,
                     'context': context,

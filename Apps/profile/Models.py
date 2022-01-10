@@ -1,7 +1,7 @@
 from NAPyF.DataBase import open_db_connection, insert
 from NAPyF.Model import Model
 from NAPyF.Types import Field
-from Settings import APPS_DIR
+from Settings import APPS_DIR, BASE_DIR
 
 import os
 
@@ -12,6 +12,14 @@ class Profile(Model):
 
     name = 'profiles'
     fields = [
+        Field(
+            name='profiles_id',
+            display_name='Profile ID',
+            data_type=int,
+            max_length=20,
+            data=None,
+            visible=False
+        ),
         Field(
             name='first_name',
             display_name='First Name',
@@ -59,6 +67,11 @@ class Profile(Model):
             for field in self.fields:
                 if field["name"] == key:
                     field["data"] = kwargs[key]
+                if field["name"] == 'picture':
+                    field["data"] = APPS_DIR + '/profile/base/profiles/default_profile_picture.png'
         con = open_db_connection()
         insert(con, self)
         con.close()
+
+
+

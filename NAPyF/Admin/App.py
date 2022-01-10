@@ -1,6 +1,6 @@
 from NAPyF.Types import Route, Method
 from NAPyF.App import App
-from NAPyF.Admin.RequestFunctions import auth_list_users, auth_get_user, auth_update_user, auth_delete_user, \
+from NAPyF.Admin.RequestFunctions import auth_list_admin_objects, auth_get_user, auth_update_user, auth_delete_user, \
     auth_logout_user, auth_login_user, get_sessions
 
 
@@ -14,7 +14,7 @@ def admin(global_static_directory, base_directory):
     app.default_route.context = {'title': 'Admin',
                                  'app_name': app.name,
                                  'static': global_static_directory,
-                                 'users': auth_list_users()}
+                                 'admin_objects': auth_list_admin_objects()}
     app.default_route.auth_level_required = 1
     app.add_route(app.default_route)
     user_edit_get_route = Route(

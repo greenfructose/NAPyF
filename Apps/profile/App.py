@@ -1,6 +1,7 @@
 from NAPyF.App import App
 from NAPyF.Types import Route, Method
-from NAPyF.Admin.RequestFunctions import auth_post_user, auth_login_user, auth_logout_user
+from NAPyF.Admin.RequestFunctions import auth_login_user, auth_logout_user
+from Apps.profile.RequestFunctions import create_user, get_profile
 
 
 def profile(global_static_directory, base_directory):
@@ -8,9 +9,11 @@ def profile(global_static_directory, base_directory):
     app.default_route.html_templates = {
         'head': f'{global_static_directory}/templates/head.html',
         'content': f'{app.template_directory}/index.html',
-        'foot': f'{global_static_directory}/templates/foot.html'
+        'foot': f'{global_static_directory}/templates/foot.html',
+        'css': f'{app.local_static_directory}/css/profile.css'
     }
     app.default_route.context = {'title': 'Profile', 'app_name': app.name, 'static': global_static_directory,}
+    app.default_route.request_function = get_profile.__name__
     app.add_route(app.default_route)
     user_registration_get_route = Route(
         app_name=app.name,
@@ -40,7 +43,7 @@ def profile(global_static_directory, base_directory):
         'content': f'{app.template_directory}/index.html',
         'foot': f'{global_static_directory}/templates/foot.html'
     }
-    user_registration_post_route.request_function = auth_post_user.__name__
+    user_registration_post_route.request_function = create_user.__name__
     user_registration_post_route.redirect = '/profile'
     app.add_route(user_registration_post_route)
 

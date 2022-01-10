@@ -1,13 +1,16 @@
+from pprint import pprint
+
 from NAPyF.Admin.Auth.Models import User
 from NAPyF.Admin.Auth.Session import Session
 from NAPyF.Admin.Auth.AuthFunctions import verify_password, list_users, get_user, update_user, delete_user
+from NAPyF.DataBase import open_db_connection
 
 
 def auth_post_user(form=None, params=None):
     data = {}
     if form is None and params is None:
         print('No form data posted')
-        return False
+        return None
     else:
         user = User()
         if form is not None:
@@ -16,7 +19,7 @@ def auth_post_user(form=None, params=None):
             user.create_user(**data)
         if params is not None:
             user.create_user(**params)
-    return True
+        return user.id
 
 
 def auth_login_user(form=None, params=None):
@@ -45,11 +48,37 @@ def auth_logout_user(form=None, params=None):
     for field in form.keys():
         data[field] = form[field].value
     result = {'username': data['username'], 'logout': True}
+
     return result
 
 
-def auth_list_users():
-    return list_users()
+def list_profiles():
+    profiles = []
+    con = open_db_connection()
+    cur = con.cursor()
+    try:
+        cur.execute("SELECT profiles_id, first_name, last_name, email, username, picture from "
+                    "profiles")
+        for row in cur.fetchall():
+            profiles.append({
+                "profiles_id": row[0],
+                "first_name": row[1],
+                "last_name": row[2],
+                "email": row[3],
+                "username": row[4],
+                "picture": row[5],
+            })
+    except Exception as e:
+        print(f'The following error occurred:\n{e}')
+    return profiles
+
+
+def auth_list_admin_objects():
+    admin_objects = {
+        'admin-user': list_users(),
+        'profile': list_profiles()
+    }
+    return admin_objects
 
 
 def auth_get_user(params):
@@ -73,7 +102,6 @@ def auth_update_user(form=None, params=None):
     data = {}
     for field in form.keys():
         data[field] = form[field].value
-    print(f"Data: {data}")
     if 'is_verified' not in data:
         data['is_verified'] = False
     else:
@@ -96,7 +124,7 @@ def get_sessions(form=None, params=None):
 
 active_functions = {
     'auth_post_user': auth_post_user,
-    'auth_list_users': auth_list_users,
+    'auth_list_admin_objects': auth_list_admin_objects,
     'auth_login_user': auth_login_user,
     'auth_logout_user': auth_logout_user,
     'auth_get_user': auth_get_user,
