@@ -21,7 +21,7 @@ def verify_password(**kwargs):
     provided_password = kwargs['password']
     con = open_db_connection()
     cur = con.cursor()
-    cur.execute('SELECT password FROM users WHERE username = (?);', [username])
+    cur.execute('SELECT password FROM user WHERE username = (?);', [username])
     stored_password = cur.fetchone()[0]
     salt = stored_password[:64]
     stored_password = stored_password[64:]
@@ -39,11 +39,11 @@ def list_users():
     user_list = []
     con = open_db_connection()
     cur = con.cursor()
-    cur.execute("SELECT users_id, first_name, last_name, email, username, auth_level, is_verified from "
-                "users")
+    cur.execute("SELECT user_id, first_name, last_name, email, username, auth_level, is_verified from "
+                "user")
     for row in cur.fetchall():
         user_list.append({
-            "users_id": row[0],
+            "user_id": row[0],
             "first_name": row[1],
             "last_name": row[2],
             "email": row[3],
@@ -57,8 +57,8 @@ def list_users():
 def get_user(id: int):
     con = open_db_connection()
     cur = con.cursor()
-    cur.execute("SELECT users_id, first_name, last_name, email, username, auth_level, is_verified from "
-                "users WHERE users_id = (?)", [id])
+    cur.execute("SELECT user_id, first_name, last_name, email, username, auth_level, is_verified from "
+                "user WHERE user_id = (?)", [id])
     return cur.fetchone()
 
 
@@ -67,7 +67,7 @@ def update_user(id: int, params):
     cur = con.cursor()
     if 'password' not in params:
         sql_update_query = """
-        UPDATE users
+        UPDATE user
         SET
         first_name = ?,
         last_name = ?,
@@ -75,7 +75,7 @@ def update_user(id: int, params):
         username = ?,
         auth_level = ?,
         is_verified = ?
-        WHERE users_id = ?
+        WHERE user_id = ?
         """
         data = (
             params["first_name"],
@@ -89,7 +89,7 @@ def update_user(id: int, params):
     else:
         password = hash_password(params["password"])
         sql_update_query = """
-        UPDATE users
+        UPDATE user
         SET
         first_name = ?,
         last_name = ?,
@@ -98,7 +98,7 @@ def update_user(id: int, params):
         password = ?,
         auth_level = ?,
         is_verified = ?
-        WHERE users_id = ?
+        WHERE user_id = ?
         """
         data = (
             params["first_name"],
@@ -118,7 +118,7 @@ def update_user(id: int, params):
 
 def delete_user(id: int):
     sql_delete_query = """
-    DELETE FROM users WHERE users_id = (?);
+    DELETE FROM user WHERE user_id = (?);
     """
     con = open_db_connection()
     cur = con.cursor()
@@ -133,5 +133,5 @@ def auth_level(username=None):
     else:
         con = open_db_connection()
         cur = con.cursor()
-        cur.execute("SELECT auth_level FROM users WHERE username = (?);", [username])
+        cur.execute("SELECT auth_level FROM user WHERE username = (?);", [username])
         return int(cur.fetchone()[0])

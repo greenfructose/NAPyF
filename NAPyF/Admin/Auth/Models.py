@@ -1,7 +1,10 @@
+from pprint import pprint
+
 from NAPyF.Model import Model
 from NAPyF.Types import Field
 from NAPyF.DataBase import insert, open_db_connection
 from NAPyF.Admin.Auth.AuthFunctions import hash_password
+from Apps.profile.Models import Profile
 
 
 class User(Model):
@@ -76,7 +79,16 @@ class User(Model):
                     hashed_password = hash_password(kwargs["password"])
                     field["data"] = hashed_password
         con = open_db_connection()
-        insert(con, self)
+        id = insert(con, self)
+        profile = Profile()
+        field_list = []
+        for field in self.fields:
+            for profile_field in profile.fields:
+                if field["name"] == profile_field["name"]:
+                    profile_field["data"] = field["data"]
+                if profile_field["name"] == 'user_id':
+                    profile_field["data"] = id
+        profile.create_profile()
         con.close()
 
 

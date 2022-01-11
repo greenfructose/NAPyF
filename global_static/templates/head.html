@@ -32,9 +32,6 @@
         <li class="nav-item mx-0 mx-lg-1">
           <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/default">Default</a>
         </li>
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/profile">Profile</a>
-        </li>
         {%
 if not session.user:
   p('<li class="nav-item mx-0 mx-lg-1">')
@@ -45,7 +42,7 @@ if not session.user:
   p('</li>')
 else:
   p('<li class="nav-item mx-0 mx-lg-1">')
-  p(f'<a class="nav-link py-3 px-0 px-lg-3 rounded" href="/profile/{session.user}">Welcome {session.user}</a>')
+  p(f'<a class="nav-link py-3 px-0 px-lg-3 rounded" href="/profile?username={session.user}">Welcome {session.user}</a>')
   p('</li>')
   p('<li class="nav-item mx-0 mx-lg-1">')
   p('<a class="nav-link py-3 px-0 px-lg-3 rounded" href="/profile/logout">Logout</a>')

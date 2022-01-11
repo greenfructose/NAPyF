@@ -15,6 +15,16 @@ def profile(global_static_directory, base_directory):
     app.default_route.context = {'title': 'Profile', 'app_name': app.name, 'static': global_static_directory,}
     app.default_route.request_function = get_profile.__name__
     app.add_route(app.default_route)
+
+    app.profile_picture_get_route = Route(
+        app_name=app.name,
+        route_path=f'/{app.name.lower()}/image',
+        file_path=f'{app.template_directory}/register.html',
+        context={'title': 'Register', 'app_name': app.name, 'static': global_static_directory, },
+        request_method=Method.GET.value,
+        auth_level_required=0
+    )
+
     user_registration_get_route = Route(
         app_name=app.name,
         route_path=f'/{app.name.lower()}/register',
@@ -44,7 +54,7 @@ def profile(global_static_directory, base_directory):
         'foot': f'{global_static_directory}/templates/foot.html'
     }
     user_registration_post_route.request_function = create_user.__name__
-    user_registration_post_route.redirect = '/profile'
+    user_registration_post_route.redirect = '/'
     app.add_route(user_registration_post_route)
 
     user_login_get_route = Route(

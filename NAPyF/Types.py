@@ -31,10 +31,23 @@ class Route(object):
     redirect = None
 
 
-class Field(TypedDict):
+class ForeignKey(object):
+    def __init__(self, local_key, referenced_table, referenced_key):
+        self.local_key = local_key
+        self.referenced_table = referenced_table
+        self.referenced_key = referenced_key
+        if self.local_key is not None:
+            self.key_string = self.get_key_string()
+
+    def get_key_string(self):
+        return f'FOREIGN KEY ({self.local_key}) REFERENCES {self.referenced_table}({self.referenced_key}), '
+
+
+class Field(TypedDict, total=False):
     name: str
     display_name: str
     data_type: Type
     max_length: int
     data: Any
     visible: bool
+    foreign_key: ForeignKey

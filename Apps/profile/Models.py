@@ -1,10 +1,7 @@
 from NAPyF.DataBase import open_db_connection, insert
 from NAPyF.Model import Model
-from NAPyF.Types import Field
-from Settings import APPS_DIR, BASE_DIR
-
-import os
-
+from NAPyF.Types import Field, ForeignKey
+from datetime import datetime
 
 class Profile(Model):
     def __init__(self):
@@ -12,14 +9,6 @@ class Profile(Model):
 
     name = 'profile'
     fields = [
-        Field(
-            name='user_id',
-            display_name='User ID',
-            data_type=int,
-            max_length=20,
-            data=None,
-            visible=False
-        ),
         Field(
             name='first_name',
             display_name='First Name',
@@ -60,15 +49,24 @@ class Profile(Model):
             data=None,
             visible=True
         ),
+        Field(
+            name='user_id',
+            display_name='User ID',
+            data_type=int,
+            max_length=100,
+            data=None,
+            visible=True,
+            foreign_key=ForeignKey('user_id', 'user', 'user_id').get_key_string()
+        )
     ]
 
-    def create_profile(self, **kwargs):
-        for key, value in kwargs.items():
-            for field in self.fields:
-                if field["name"] == key:
-                    field["data"] = kwargs[key]
-                if field["name"] == 'picture':
-                    field["data"] = APPS_DIR + '/profile/base/profiles/default_profile_picture.png'
+    def create_profile(self):
+        username = ''
+        for field in self.fields:
+            if field["name"] == 'username':
+                username = field["data"]
+            if field["name"] == 'picture':
+                field["data"] = f'/{username}'
         con = open_db_connection()
         insert(con, self)
         con.close()

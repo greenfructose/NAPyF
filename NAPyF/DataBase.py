@@ -65,6 +65,8 @@ def model_to_sql(model: Model):
     headers = f'({table}_id INTEGER PRIMARY KEY AUTOINCREMENT, '
     for field in model.fields:
         headers += f'{field["name"]} {python_type_to_sqlite3_type[field["data_type"]]}, '
+        if "foreign_key" in field:
+            headers += f'{field["foreign_key"]}'
     headers = headers[:-2] + ")"
     return table, headers
 

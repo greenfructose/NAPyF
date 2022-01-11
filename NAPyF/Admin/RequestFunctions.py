@@ -17,9 +17,10 @@ def auth_post_user(form=None, params=None):
             for field in form.keys():
                 data[field] = form[field].value
             user.create_user(**data)
+            return True
         if params is not None:
             user.create_user(**params)
-        return user.id
+            return True
 
 
 def auth_login_user(form=None, params=None):
@@ -57,16 +58,17 @@ def list_profiles():
     con = open_db_connection()
     cur = con.cursor()
     try:
-        cur.execute("SELECT profiles_id, first_name, last_name, email, username, picture from "
-                    "profiles")
+        cur.execute("SELECT profile_id, first_name, last_name, email, username, picture, user_id from "
+                    "profile")
         for row in cur.fetchall():
             profiles.append({
-                "profiles_id": row[0],
+                "profile_id": row[0],
                 "first_name": row[1],
                 "last_name": row[2],
                 "email": row[3],
                 "username": row[4],
                 "picture": row[5],
+                "user_id": row[6],
             })
     except Exception as e:
         print(f'The following error occurred:\n{e}')

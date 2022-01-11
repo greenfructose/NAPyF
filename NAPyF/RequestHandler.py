@@ -87,7 +87,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                     return
                 self.end_headers()
                 if 'request_function' in self.route:
-                    result = active_functions[self.route["request_function"]](params)
+                    print(self.context)
+                    result = active_functions[self.route["request_function"]](params=params)
                     self.context = self.context | result
                 if self.session is None:
                     self.session = Session()
@@ -165,7 +166,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                     if self.session:
                         if self.session.cookie != {}:
                             self.send_header('Set-Cookie', self.session.cookie)
-                    self.send_header('Location', self.route["redirect"])
+                    self.send_header('Location', self.route["redirect"] + '?username=' + self.session.session["username"])
                     self.end_headers()
                     return
                 else:
