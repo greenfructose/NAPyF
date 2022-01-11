@@ -34,6 +34,38 @@ class ProfileForm(Form):
         return generate_profile_form(self, action, css_mixin)
 
 
+class ProfileEditForm(Form):
+    delete_button = '<form method="post" action="/profile/delete?id={%p(context[\'profile_id\'])%}">' \
+                    '<input type="hidden" name="null">' \
+                    '<button type="submit" class="btn btn-danger">Delete Profile</button>' \
+                    '</form>'
+    fields = Profile.fields
+    form_dict = {}
+    submit_button_label = 'Submit'
+    for field in fields:
+        input_type = ""
+        if field["data_type"] == str or field["data_type"] == int or field["data_type"] == float:
+            if field["name"] == 'email':
+                input_type = 'email'
+            else:
+                input_type = "text"
+        if field["name"] == 'user_id':
+            continue
+        form_dict[field["name"]] = {
+            'label': field["name"],
+            'input_type': input_type,
+            'id': field["name"],
+            'name': field["name"],
+            'display_name': field["display_name"],
+            'data': field["data"],
+            'visible': True,
+            'editable': True,
+        }
+
+    def edit_profile_form(self, action: str, css_mixin: dict = None):
+        return generate_profile_form(self, action, css_mixin)
+
+
 def generate_profile_form(profile, action: str, css_mixin: dict = None):
     form = f'<form class="was-validated" method="post" action="{action}">\n'
     if css_mixin:
@@ -41,9 +73,6 @@ def generate_profile_form(profile, action: str, css_mixin: dict = None):
             pattern = ""
             invalid_message = "Invalid Input"
             required = 'required'
-            if profile.form_dict[key]['name'] == 'password' or profile.form_dict[key]['name'] == 'verify_password':
-                pattern = f' pattern="{PASSWORD_REQS}"'
-                invalid_message = PASSWORD_ERROR_TEXT
             if profile.form_dict[key]['name'] == 'username':
                 pattern = f' pattern="{USERNAME_REQS}"'
                 invalid_message = USERNAME_ERROR_TEXT
@@ -75,8 +104,6 @@ def generate_profile_form(profile, action: str, css_mixin: dict = None):
                     input_css = 'checkbox'
                     if profile.form_dict[key]['data'] == '1':
                         checked = 'checked'
-                if profile.form_dict[key]['name'] == 'password':
-                    data = ""
                 else:
                     data = '{%print(context["' + profile.form_dict[key]["name"] + '"], end="")%}'
                 field = f'\t<div class ="{css_mixin["div"]}">\n\t\t' \
@@ -88,7 +115,7 @@ def generate_profile_form(profile, action: str, css_mixin: dict = None):
                         f'type="{profile.form_dict[key]["input_type"]}" ' \
                         f'id="{profile.form_dict[key]["id"]}"\n' \
                         f'name="{profile.form_dict[key]["name"]}" ' \
-                        f'value="{profile}" ' \
+                        f'value="{data}" ' \
                         f'{checked}>\n' \
                         f'\t<div class="valid-feedback">Valid.</div>\n' \
                         f'\t<div class="invalid-feedback">{invalid_message}</div>' \

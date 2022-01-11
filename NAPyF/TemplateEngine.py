@@ -8,6 +8,7 @@ from Settings import CODE_FORMAT_OPTIONS
 from NAPyF.Admin.Auth.Forms import *
 from NAPyF.Admin.Auth.AuthFunctions import auth_level
 from NAPyF.TemplateTags import *
+from Apps.profile.Forms import *
 
 
 class TemplateReader:
@@ -58,6 +59,7 @@ class CodeBlock:
                 user_login_form = UserLoginForm().new_login_form
                 new_user_form = UserForm().new_user_form
                 user_edit_form = UserEditForm().edit_user_form
+                profile_edit_form = ProfileEditForm().edit_profile_form
                 css_mixin = bootstrap_css_mixin
                 _globals = {}
                 _locals = context, session
@@ -69,6 +71,7 @@ class CodeBlock:
                     'context': context,
                     'block': context['html_templates'],
                     'r': render,
+                    'profile_edit_form': profile_edit_form,
                     'new_user_form': new_user_form,
                     'user_login_form': user_login_form,
                     'user_logout_form': user_logout_form,

@@ -3,21 +3,43 @@ from NAPyF.Admin.RequestFunctions import auth_post_user
 from NAPyF.DataBase import open_db_connection
 
 
-# def create_profile(form=None, params=None, user_id=None):
-#     data = {}
-#     if form is None and params is None:
-#         print('No form data posted')
-#         return False
-#     else:
-#         profile = Profile()
-#         if form is not None:
-#             for field in profile.fields:
-#                 if field["name"] == 'profiles_id':
-#                     data["profiles_id"] = user_id
-#                 if field["name"] in form.keys():
-#                     data[field["name"]] = form[field["name"]].value
-#             profile.create_profile(**data)
-#     return True
+def update_profile(id: int, params):
+
+    con = open_db_connection()
+    cur = con.cursor()
+    sql_update_query = """
+    UPDATE profile
+    SET
+    first_name = ?,
+    last_name = ?,
+    email = ?,
+    username = ?,
+    picture = ?,
+    bio = ?
+    WHERE profile_id = ?
+    """
+    data = (
+        params["first_name"],
+        params["last_name"],
+        params["email"],
+        params["username"],
+        params["picture"],
+        params["bio"],
+        id,
+    )
+    cur.execute(sql_update_query, data)
+    con.commit()
+    con.close()
+    return
+
+
+def request_update_profile(form=None, params=None):
+    profile_id = params['id']
+    data = {}
+    for field in form.keys():
+        data[field] = form[field].value
+    update_profile(profile_id, data)
+    return True
 
 
 def create_user(form=None, params=None):
@@ -31,11 +53,11 @@ def get_profile(form=None, params=None):
     print(params)
     if 'id' in params:
         id = params['id']
-        cur.execute("SELECT profile_id, first_name, last_name, email, username, picture from "
+        cur.execute("SELECT profile_id, first_name, last_name, email, username, picture, bio from "
                     "profile WHERE profile_id = (?)", [id])
     elif 'username' in params:
         username = params['username']
-        cur.execute("SELECT profile_id, first_name, last_name, email, username, picture from "
+        cur.execute("SELECT profile_id, first_name, last_name, email, username, picture, bio from "
                     "profile WHERE username = (?)", [username])
     profile = cur.fetchone()
     profile = {
@@ -45,6 +67,7 @@ def get_profile(form=None, params=None):
         "email": profile[3],
         "username": profile[4],
         "picture": profile[5],
+        "bio": profile[6],
     }
     con.close()
     return profile

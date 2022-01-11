@@ -20,7 +20,7 @@ class App:
         self.models_file = self.app_dir + '/Models.py'
         self.forms_file = self.app_dir + '/Forms.py'
         self.template_directory = self.app_base + '/templates'
-        self.local_static_directory = self.app_base + '/local_static'
+        self.local_static_directory = self.app_dir + '/local_static'
         self.relative_route_path = '/' + self.name.lower()
         self.html_templates = {
             'content': f'{self.template_directory}/index.html', }
@@ -83,7 +83,7 @@ class App:
 
     def add_route(self, route):
         """Adds route to app"""
-        if not os.path.isfile(route.file_path) and '/static' not in route.route_path:
+        if not os.path.isfile(route.file_path) and 'static' not in route.route_path:
             file = open(route.file_path, 'w+')
             file.close()
         self.routes.append(route.__dict__)

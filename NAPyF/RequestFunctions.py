@@ -12,5 +12,6 @@ active_functions = {
     'auth_delete_user': auth_delete_user,
     'get_sessions': get_sessions,
     'create_user': create_user,
-    'get_profile': get_profile
+    'get_profile': get_profile,
+    'request_update_profile': request_update_profile,
 }

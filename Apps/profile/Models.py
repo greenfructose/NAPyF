@@ -1,7 +1,7 @@
 from NAPyF.DataBase import open_db_connection, insert
 from NAPyF.Model import Model
 from NAPyF.Types import Field, ForeignKey
-from datetime import datetime
+
 
 class Profile(Model):
     def __init__(self):
@@ -46,7 +46,15 @@ class Profile(Model):
             display_name='Profile Picture',
             data_type=str,
             max_length=100,
-            data=None,
+            data='default_profile_picture.png',
+            visible=True
+        ),
+        Field(
+            name='bio',
+            display_name='Username',
+            data_type=str,
+            max_length=100,
+            data='This is the default bio.',
             visible=True
         ),
         Field(
@@ -55,18 +63,12 @@ class Profile(Model):
             data_type=int,
             max_length=100,
             data=None,
-            visible=True,
+            visible=False,
             foreign_key=ForeignKey('user_id', 'user', 'user_id').get_key_string()
-        )
+        ),
     ]
 
     def create_profile(self):
-        username = ''
-        for field in self.fields:
-            if field["name"] == 'username':
-                username = field["data"]
-            if field["name"] == 'picture':
-                field["data"] = f'/{username}'
         con = open_db_connection()
         insert(con, self)
         con.close()

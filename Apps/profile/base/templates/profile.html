@@ -1,0 +1,10 @@
+{%p(r(block["head"], context, session))%}
+<div class="container">
+    <h1>Edit Profile for {%print(context["username"])%}</h1>
+    <div class="card">
+        <div class="card-body">
+{%p(r(template_string=profile_edit_form(f'/profile/edit?id={context["profile_id"]}', css_mixin), context=context, session=session))%}
+        </div>
+    </div>
+</div>
+{%p(r(block["foot"], context))%}

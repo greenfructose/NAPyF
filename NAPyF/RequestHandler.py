@@ -1,4 +1,3 @@
-
 import sys
 import mimetypes
 from http.server import BaseHTTPRequestHandler
@@ -13,7 +12,8 @@ from NAPyF.Admin.Auth.Session import Session
 from NAPyF.Admin.Auth.AuthFunctions import auth_level
 import NAPyF.Routes as Route
 import cgi
-from Settings import GLOBAL_STATIC_DIRECTORY, BASE_DIR
+from Settings import GLOBAL_STATIC_DIRECTORY, BASE_DIR, APPS_DIR
+
 sessions = {}
 
 
@@ -164,9 +164,14 @@ class RequestHandler(BaseHTTPRequestHandler):
                     Route.route_builder(GLOBAL_STATIC_DIRECTORY, BASE_DIR)
                     self.send_response(302)
                     if self.session:
+                        print(self.session.user)
                         if self.session.cookie != {}:
                             self.send_header('Set-Cookie', self.session.cookie)
-                    self.send_header('Location', self.route["redirect"] + '?username=' + self.session.session["username"])
+                            self.send_header('Location',
+                                             self.route["redirect"] + '?username=' + self.session.session["username"])
+                        else:
+                            self.send_header('Location',
+                                             self.route["redirect"] + '?username=' + self.session.user)
                     self.end_headers()
                     return
                 else:
@@ -187,6 +192,12 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.route_match = True
                 path = path.replace('/static', '')
                 self.file_path = route["file_path"] + path
+                self.route = route
+                return
+            elif '/local_static' in route["route_path"] and '/local_static' in path:
+                self.route_match = True
+                # path = path.replace('/local_static', '')
+                self.file_path = APPS_DIR + path
                 self.route = route
                 return
             elif path == route["route_path"] and method == route["request_method"]:

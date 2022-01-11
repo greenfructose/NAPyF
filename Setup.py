@@ -58,7 +58,7 @@ def validate(case, prompt, label, reqs, error):
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "", ["createadmin"])
+        opts, args = getopt.getopt(argv, "", ["createadmin", "quick"])
     except getopt.GetoptError:
         print('Some error occured')
         print('Setup.py -createadmin             ----- Create Admin User')
@@ -70,6 +70,21 @@ def main(argv):
                 for key, value in validation_dict.items():
                     user_attr = user_attr | validate(key, value[0], value[1], value[2], value[3])
                 user_attr = user_attr | {'auth_level': 9001, 'is_verified': True}
+                if auth_post_user(params=user_attr):
+                    print(f'Admin {user_attr["username"]} created succesfully.')
+            except KeyboardInterrupt:
+                sys.exit()
+        if opt == "--quick":
+            try:
+                user_attr = {
+                    "first_name": "Justin",
+                    "last_name": "Turney",
+                    "email": "info@napyf.com",
+                    "username": "admin",
+                    "password": "Oicu812!",
+                    "auth_level": 9001,
+                    "is_verified": True
+                }
                 if auth_post_user(params=user_attr):
                     print(f'Admin {user_attr["username"]} created succesfully.')
             except KeyboardInterrupt:
