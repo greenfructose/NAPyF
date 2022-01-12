@@ -4,6 +4,7 @@ from NAPyF.Admin.Auth.Models import User
 from NAPyF.Admin.Auth.Session import Session
 from NAPyF.Admin.Auth.AuthFunctions import verify_password, list_users, get_user, update_user, delete_user
 from NAPyF.DataBase import open_db_connection
+from Settings import APPS_DIR
 
 
 def auth_post_user(form=None, params=None):
@@ -53,6 +54,13 @@ def auth_logout_user(form=None, params=None):
     return result
 
 
+def write_to_file(data, filename):
+    # Convert binary data to proper format and write it on Hard Disk
+    with open(filename, 'wb') as file:
+        file.write(data)
+    print("Stored blob data into: ", filename, "\n")
+
+
 def list_profiles():
     profiles = []
     con = open_db_connection()
@@ -61,13 +69,14 @@ def list_profiles():
         cur.execute("SELECT profile_id, first_name, last_name, email, username, picture, user_id from "
                     "profile")
         for row in cur.fetchall():
+            write_to_file(row[5], f'{APPS_DIR}/profile/local_static/profiles/{row[0]}_profile_picture.png')
             profiles.append({
                 "profile_id": row[0],
                 "first_name": row[1],
                 "last_name": row[2],
                 "email": row[3],
                 "username": row[4],
-                "picture": row[5],
+                "picture": f'{row[0]}_profile_picture.png',
                 "user_id": row[6],
             })
     except Exception as e:

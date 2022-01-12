@@ -88,7 +88,7 @@ def profile(global_static_directory, base_directory):
         'foot': f'{global_static_directory}/templates/foot.html'
     }
     user_registration_post_route.request_function = create_user.__name__
-    user_registration_post_route.redirect = '/'
+    user_registration_post_route.redirect = '/profile/login'
     app.add_route(user_registration_post_route)
 
     user_login_get_route = Route(

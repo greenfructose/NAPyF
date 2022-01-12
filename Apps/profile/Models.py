@@ -1,6 +1,14 @@
 from NAPyF.DataBase import open_db_connection, insert
 from NAPyF.Model import Model
 from NAPyF.Types import Field, ForeignKey
+from Settings import APPS_DIR
+
+
+def convertToBinaryData(filename):
+    # Convert digital data to binary format
+    with open(filename, 'rb') as file:
+        blobData = file.read()
+    return bytes(blobData)
 
 
 class Profile(Model):
@@ -44,14 +52,15 @@ class Profile(Model):
         Field(
             name='picture',
             display_name='Profile Picture',
-            data_type=str,
+            data_type=bytes,
             max_length=100,
-            data='default_profile_picture.png',
+            filename='default_profile_picture.png',
+            data=convertToBinaryData(f'{APPS_DIR}/profile/local_static/profiles/default_profile_picture.png'),
             visible=True
         ),
         Field(
             name='bio',
-            display_name='Username',
+            display_name='Bio',
             data_type=str,
             max_length=100,
             data='This is the default bio.',
@@ -72,6 +81,3 @@ class Profile(Model):
         con = open_db_connection()
         insert(con, self)
         con.close()
-
-
-

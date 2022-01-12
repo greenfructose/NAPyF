@@ -35,7 +35,7 @@ class ProfileForm(Form):
 
 
 class ProfileEditForm(Form):
-    delete_button = '<form method="post" action="/profile/delete?id={%p(context[\'profile_id\'])%}">' \
+    delete_button = '<form method="post" action="/profile/delete?id={%p(context[\'profile_id\'])%&username={%p(session.user)%}}">' \
                     '<input type="hidden" name="null">' \
                     '<button type="submit" class="btn btn-danger">Delete Profile</button>' \
                     '</form>'
@@ -51,6 +51,8 @@ class ProfileEditForm(Form):
                 input_type = "text"
         if field["name"] == 'user_id':
             continue
+        if field["name"] == 'picture':
+            input_type = 'file'
         form_dict[field["name"]] = {
             'label': field["name"],
             'input_type': input_type,
@@ -67,7 +69,7 @@ class ProfileEditForm(Form):
 
 
 def generate_profile_form(profile, action: str, css_mixin: dict = None):
-    form = f'<form class="was-validated" method="post" action="{action}">\n'
+    form = f'<form enctype="multipart/form-data" "class="was-validated" method="post" action="{action}">\n'
     if css_mixin:
         for key, value in profile.form_dict.items():
             pattern = ""
@@ -104,6 +106,8 @@ def generate_profile_form(profile, action: str, css_mixin: dict = None):
                     input_css = 'checkbox'
                     if profile.form_dict[key]['data'] == '1':
                         checked = 'checked'
+                if profile.form_dict[key]['input_type'] == 'file':
+                    data = 'Upload'
                 else:
                     data = '{%print(context["' + profile.form_dict[key]["name"] + '"], end="")%}'
                 field = f'\t<div class ="{css_mixin["div"]}">\n\t\t' \

@@ -57,3 +57,6 @@ for key, item in admin_objects.items():
         print('</tr>')
     print('</tbody>')
     print('</table>')
+
+    print('<div class="d-flex mt-2"><a class="btn btn-primary" href="/profile/edit?id={%p(context["profile_id"], end="")%}">Edit Profile</a> </div>')
+

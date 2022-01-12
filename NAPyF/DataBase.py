@@ -32,7 +32,7 @@ def insert(connection, model: Model):
     sqlite3.register_adapter(bool, int)
     sqlite3.register_converter("BOOLEAN", lambda v: bool(int(v)))
     cursor = connection.cursor()
-    values = ""
+    values = []
     try:
         cursor.execute(f"SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{model.name}'")
         if cursor.fetchone()[0] != 1:
@@ -41,16 +41,24 @@ def insert(connection, model: Model):
     except Error as e:
         print(e)
     try:
+        variables = "(NULL, "
         for field in model.fields:
+            variables += '?,'
             if field["data_type"] == str:
                 data = field["data"]
-                values += f"'{data}', "
+                values.append(data)
+            elif field["data_type"] == bytes:
+                data = field["data"]
+                values.append(memoryview(data).tobytes())
             else:
-                values += f'{field["data"]}, '
-        values = values[:-2]
-        statement = f'INSERT INTO {model.name} VALUES ' \
-                    f'(NULL, {values})'
-        cursor.execute(statement)
+                values.append(field["data"])
+
+        statement = f'INSERT INTO {model.name} VALUES '
+        variables = variables[:-1]
+        variables += ')'
+        statement += variables
+        print(f'STATEMENT: {statement}')
+        cursor.execute(statement, values)
         id = cursor.lastrowid
         connection.commit()
         return id
@@ -68,6 +76,7 @@ def model_to_sql(model: Model):
         if "foreign_key" in field:
             headers += f'{field["foreign_key"]}'
     headers = headers[:-2] + ")"
+    print(f'TABLE HEADERS: {headers}')
     return table, headers
 
 

@@ -172,6 +172,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                         else:
                             self.send_header('Location',
                                              self.route["redirect"] + '?username=' + self.session.user)
+                    else:
+                        self.send_header('Location', self.route["redirect"])
                     self.end_headers()
                     return
                 else:

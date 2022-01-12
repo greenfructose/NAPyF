@@ -51,3 +51,4 @@ class Field(TypedDict, total=False):
     data: Any
     visible: bool
     foreign_key: ForeignKey
+    filename: str

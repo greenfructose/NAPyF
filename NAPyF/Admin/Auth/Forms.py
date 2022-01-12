@@ -173,8 +173,8 @@ def generate_user_form(user, action: str, css_mixin: dict = None):
                         f'id="{user.form_dict[key]["id"]}"\n' \
                         f'name="{user.form_dict[key]["name"]}" ' \
                         f'required{pattern}>' \
-                        f'\t<div class="valid-feedback">Valid.</div>\n' \
-                        f'\t<div class="invalid-feedback">{invalid_message}</div>' \
+                        f'\t<p class="valid-feedback">Valid.</p>\n' \
+                        f'\t<p class="invalid-feedback">{invalid_message}</p>' \
                         f'\t</div>\n'
             elif 'editable'in user.form_dict[key]:
                 required = ""
