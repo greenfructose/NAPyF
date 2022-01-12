@@ -44,6 +44,7 @@ class ProfileEditForm(Form):
     submit_button_label = 'Submit'
     for field in fields:
         input_type = ""
+        data = field["data"]
         if field["data_type"] == str or field["data_type"] == int or field["data_type"] == float:
             if field["name"] == 'email':
                 input_type = 'email'
@@ -53,13 +54,14 @@ class ProfileEditForm(Form):
             continue
         if field["name"] == 'picture':
             input_type = 'file'
+
         form_dict[field["name"]] = {
             'label': field["name"],
             'input_type': input_type,
             'id': field["name"],
             'name': field["name"],
             'display_name': field["display_name"],
-            'data': field["data"],
+            'data': data,
             'visible': True,
             'editable': True,
         }

@@ -53,7 +53,8 @@ def get_profile_id_by_username(username):
 def request_update_profile(form=None, params=None):
     profile_id = params['id']
     username = params['username']
-    if profile_id == get_profile_id_by_username(username):
+    if int(profile_id) == int(get_profile_id_by_username(username)):
+        print('editing allowed')
         data = {}
         for field in form.keys():
             if field == 'picture':
